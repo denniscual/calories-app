@@ -4,5 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
-  "workspaces": ["api", "app"]
+  "workspaces": [
+    "app",
+    "api-service"
+  ]
 }
