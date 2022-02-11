@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "api:start": "yarn workspace api-service start",
-    "api:build:watch": "yarn workspace api-service start",
+    "api:build:watch": "yarn workspace api-service build:watch",
     "app:start": "yarn workspace app start"
   }
 }

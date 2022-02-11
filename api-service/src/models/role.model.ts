@@ -1,13 +1,13 @@
-export default function RoleModel(sequelize: any, Sequelize: any) {
-  const Role = sequelize.define('roles', {
+import RootSequelize from 'sequelize';
+
+export default function RoleModel(sequelize: RootSequelize.Sequelize): any {
+  return sequelize.define('roles', {
     id: {
-      type: Sequelize.INTEGER,
+      type: RootSequelize.INTEGER,
       primaryKey: true,
     },
     name: {
-      type: Sequelize.STRING,
+      type: RootSequelize.STRING,
     },
   });
-
-  return Role;
 }

@@ -1,15 +1,27 @@
-export default function UserModel(sequelize: any, Sequelize: any) {
-  const User = sequelize.define('users', {
+import RootSequelize from 'sequelize';
+
+// TODO:
+// - continue adding/updating models like the user and the food entry.
+
+export default function UserModel(sequelize: RootSequelize.Sequelize): any {
+  return sequelize.define('users', {
     username: {
-      type: Sequelize.STRING,
+      type: RootSequelize.STRING,
     },
     email: {
-      type: Sequelize.STRING,
+      type: RootSequelize.STRING,
     },
     password: {
-      type: Sequelize.STRING,
+      type: RootSequelize.STRING,
+    },
+    fullName: {
+      type: RootSequelize.STRING,
+    },
+    maxCalories: {
+      type: RootSequelize.INTEGER,
+    },
+    maxPricePerMonth: {
+      type: RootSequelize.INTEGER,
     },
   });
-
-  return User;
 }
