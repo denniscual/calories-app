@@ -1,5 +1,6 @@
 // import { verifyToken, isModerator, isAdmin } from '../middleware';
 import * as userController from '../controllers/user.controller';
+import { verifyToken } from '../middleware';
 
 export default function (app) {
   app.use(function (req, res, next) {
@@ -10,23 +11,5 @@ export default function (app) {
     next();
   });
 
-  app.get('/api/test/all', userController.allAccess);
-
-  // app.get(
-  //   "/api/test/user",
-  //   [verifyToken],
-  //   userController.userBoard
-  // );
-
-  // app.get(
-  //   "/api/test/mod",
-  //   [verifyToken, isModerator],
-  //   userController.moderatorBoard
-  // );
-
-  // app.get(
-  //   "/api/test/admin",
-  //   [verifyToken, isAdmin],
-  //   userController.adminBoard
-  // );
+  app.get('/api/users', [verifyToken], userController.getUser);
 }

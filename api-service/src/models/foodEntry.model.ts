@@ -1,6 +1,8 @@
 import RootSequelize from 'sequelize';
 
-export default function FoodEntryModel(sequelize: RootSequelize.Sequelize) {
+export default function FoodEntryModel(
+  sequelize: RootSequelize.Sequelize,
+): any {
   return sequelize.define('foodEntries', {
     id: {
       type: RootSequelize.UUID,

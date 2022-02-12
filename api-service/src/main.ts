@@ -3,6 +3,7 @@ import cors from 'cors';
 import db from './models';
 import userRoutes from './routes/user.routes';
 import authRoutes from './routes/auth.routes';
+import foodEntryRoutes from './routes/foodEntry.routes';
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 // routes
 authRoutes(app);
 userRoutes(app);
+foodEntryRoutes(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

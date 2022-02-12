@@ -1,27 +1,33 @@
 import jwt from 'jsonwebtoken';
 import config from '../config/auth.config.js';
 import db from '../models';
+import { HTTPStatuses } from '../utils/index.js';
+import * as authorization from 'auth-header';
 
 const User = db.user;
 
 export function verifyToken(req, res, next) {
-  const token = req.headers['x-access-token'];
+  const bearerToken = req.get('authorization');
 
-  if (!token) {
-    return res.status(403).send({
-      message: 'No token provided!',
+  if (!bearerToken) {
+    return res.status(HTTPStatuses.UNAUTHORIZED).send({
+      message: 'Unauthorized request.',
     });
   }
 
-  jwt.verify(token, config.secret, (err, decoded) => {
-    if (err) {
-      return res.status(401).send({
-        message: 'Unauthorized!',
-      });
-    }
-    req.userId = decoded.id;
-    next();
-  });
+  jwt.verify(
+    authorization.parse(bearerToken).token,
+    config.secret,
+    (err, decoded) => {
+      if (err) {
+        return res.status(HTTPStatuses).send({
+          message: 'Unauthorized!',
+        });
+      }
+      req.userId = decoded.id;
+      next();
+    },
+  );
 }
 
 export function isAdmin(req, res, next) {
