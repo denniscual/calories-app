@@ -4,7 +4,7 @@ import db from '../models';
 
 export const checkIfUserIsExisted: RequestHandler = async (req, res, next) => {
   try {
-    const user = await db.user.findByPk(req.body.userId);
+    const user = await db.user.findByPk(req.params.userId);
     if (user === null) {
       res
         .status(HTTPStatuses.NOT_FOUND)

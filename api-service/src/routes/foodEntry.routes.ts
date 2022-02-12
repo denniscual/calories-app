@@ -11,9 +11,14 @@ export default function (app) {
   });
 
   app.post(
-    '/api/entries',
-    [checkIfUserIsExisted],
-    [checkIfUserIsExisted, verifyToken],
+    '/api/users/:userId/entries',
+    [verifyToken, checkIfUserIsExisted],
     foodEntryController.createFoodEntry,
+  );
+
+  app.put(
+    '/api/users/:userId/entries/:entryId',
+    [verifyToken, checkIfUserIsExisted],
+    foodEntryController.updateFoodEntry,
   );
 }
