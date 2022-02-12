@@ -1,14 +1,53 @@
 import db from '../models';
 import { RequestHandler } from 'express';
 import { createResponseMessage, HTTPStatuses } from '../utils';
+import moment from 'moment';
 
+// TODO:
+// - move this ine to User routes.
+// - when using calendar to add food entries, send `createdAt` and `updatedAt` in UTC or in local dates then convert in the server the dates in UTC.
 export const getUserFoodEntries: RequestHandler = async (req, res) => {
-  const { params } = req;
-
   try {
+    // This logic should be exluded in this controller. This should be in controller of food entries named "getWeeksReport" controller.
+    // Last 7 days food entries
+    const [utcStartDate, utcEndDate] = createLast7DaysDateRange(moment().utc());
+    // TODO:
+    // - compute last last 7 days food entries on top of "last 7 days" computation.
+    const last7DaysFoodEntries = await db.foodEntry.findAll({
+      where: {
+        [db.Sequelize.Op.or]: {
+          createdAt: {
+            [db.Sequelize.Op.between]: [utcStartDate, utcEndDate],
+          },
+        },
+      },
+    });
+
+    const weekBeforeLast7DaysFoodEntries = await db.foodEntry.findAll({
+      where: {
+        [db.Sequelize.Op.or]: {
+          createdAt: {
+            [db.Sequelize.Op.between]: createLast7DaysDateRange(
+              utcStartDate.clone(),
+            ),
+          },
+        },
+      },
+    });
+
+    console.log(
+      'last7Days',
+      last7DaysFoodEntries.map((entry) => entry.toJSON()),
+    );
+    console.log(
+      'weekBefore',
+      weekBeforeLast7DaysFoodEntries.map((entry) => entry.toJSON()),
+    );
+
     const foodEntries = await db.foodEntry.findAll({
       where: {
-        userId: params.userId,
+        // @ts-expect-error Accessing non-standard `Request` object.
+        userId: req.userId,
       },
     });
 
@@ -146,3 +185,8 @@ export const deleteFoodEntry: RequestHandler = async (req, res) => {
       .send(createResponseMessage(err.message));
   }
 };
+
+function createLast7DaysDateRange(utcEndDate) {
+  const utcStartDate = utcEndDate.clone().subtract(6, 'days');
+  return [utcStartDate, utcEndDate];
+}
