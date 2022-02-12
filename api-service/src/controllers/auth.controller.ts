@@ -2,12 +2,14 @@ import db from '../models';
 import config from '../config/auth.config';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { HTTPStatuses, createResponseMessage } from '../utils';
+import { RequestHandler } from 'express';
 
 const User = db.user;
 const Role = db.role;
 const Op = db.Sequelize.Op;
 
-export function signup(req, res) {
+export const signup: RequestHandler = (req, res) => {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -24,22 +26,28 @@ export function signup(req, res) {
           },
         }).then((roles) => {
           user.setRoles(roles).then(() => {
-            res.send({ message: 'User registered successfully!' });
+            const token = generateToken(user.id);
+            res.status(HTTPStatuses.CREATED_ONCE_SUCCESS).send(
+              createResponseMessage('User registered successfully!', {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                roles,
+                accessToken: token,
+              }),
+            );
           });
-        });
-      } else {
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.send({ message: 'User registered successfully!' });
         });
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res
+        .status(HTTPStatuses.BAD_REQUEST)
+        .send(createResponseMessage(err.message));
     });
-}
+};
 
-export function signin(req, res) {
+export const signin: RequestHandler = (req, res) => {
   User.findOne({
     where: {
       username: req.body.username,
@@ -47,7 +55,9 @@ export function signin(req, res) {
   })
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'User Not found.' });
+        return res
+          .status(HTTPStatuses.NOT_FOUND)
+          .send(createResponseMessage('User not found.'));
       }
 
       const passwordIsValid = bcrypt.compareSync(
@@ -56,31 +66,40 @@ export function signin(req, res) {
       );
 
       if (!passwordIsValid) {
-        return res.status(401).send({
-          accessToken: null,
-          message: 'Invalid Password!',
-        });
+        return res
+          .status(HTTPStatuses.UNAUTHORIZED)
+          .send(
+            createResponseMessage('Invalid password.', { accessToken: null }),
+          );
       }
 
-      const token = jwt.sign({ id: user.id }, config.secret, {
-        expiresIn: 86400, // 24 hours
-      });
+      const token = generateToken(user.id);
 
-      const authorities = [];
       user.getRoles().then((roles) => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push('ROLE_' + roles[i].name.toUpperCase());
-        }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: authorities,
-          accessToken: token,
-        });
+        res.status(HTTPStatuses.SUCCESS).send(
+          createResponseMessage('Successfully signed in', {
+            id: user.id,
+            username: user.username,
+            fullName: user.fullName,
+            maxCalories: user.maxCalories,
+            maxPricePerMonth: user.maxPricePerMonth,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+            roles,
+            accessToken: token,
+          }),
+        );
       });
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res
+        .status(HTTPStatuses.BAD_REQUEST)
+        .send(createResponseMessage(err.message));
     });
+};
+
+function generateToken(userId: string) {
+  return jwt.sign({ id: userId }, config.secret, {
+    expiresIn: 86400, // 24 hours
+  });
 }

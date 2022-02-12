@@ -33,3 +33,16 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+// createRoles()
+//   .then(() => {
+//     console.log('Successful');
+//   })
+//   .catch((err) => {
+//     console.log(err.message);
+//   });
+
+// async function createRoles() {
+//   await db.role.create({ name: 'ROLE_ADMIN' });
+//   await db.role.create({ name: 'ROLE_USER' });
+// }

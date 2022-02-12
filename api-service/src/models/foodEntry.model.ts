@@ -1,9 +1,12 @@
 import RootSequelize from 'sequelize';
 
 export default function FoodEntryModel(sequelize: RootSequelize.Sequelize) {
-  return sequelize.define('users', {
-    username: {
-      type: RootSequelize.STRING,
+  return sequelize.define('foodEntries', {
+    id: {
+      type: RootSequelize.UUID,
+      defaultValue: RootSequelize.UUIDV4,
+      allowNull: false,
+      primaryKey: true,
     },
     name: {
       type: RootSequelize.STRING,

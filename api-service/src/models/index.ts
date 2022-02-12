@@ -1,6 +1,7 @@
 import config from '../config/db.config';
 import UserModel from './user.model';
 import RoleModel from './role.model';
+import FoodEntry from './foodEntry.model';
 import Sequelize from 'sequelize';
 
 const sequelize = new Sequelize.Sequelize(
@@ -24,18 +25,28 @@ const db = {
   sequelize,
   role: RoleModel(sequelize),
   user: UserModel(sequelize),
+  foodEntry: FoodEntry(sequelize),
   ROLES: ['ROLE_ADMIN', 'ROLE_USER'],
 };
 
+// Many-To-Many relationship
 db.role.belongsToMany(db.user, {
   through: 'user_roles',
   foreignKey: 'roleId',
   otherKey: 'userId',
 });
+// Many-To-Many relationship
 db.user.belongsToMany(db.role, {
   through: 'user_roles',
   foreignKey: 'userId',
   otherKey: 'roleId',
+});
+// One-To-One relationship.
+db.user.hasOne(db.foodEntry, {
+  foreignKey: {
+    allowNull: false,
+    name: 'userId',
+  },
 });
 
 db.ROLES = ['ROLE_ADMIN', 'ROLE_USER'];
