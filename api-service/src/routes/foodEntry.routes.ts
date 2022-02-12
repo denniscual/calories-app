@@ -10,15 +10,33 @@ export default function (app) {
     next();
   });
 
+  app.get(
+    '/api/entries',
+    [verifyToken, checkIfUserIsExisted],
+    foodEntryController.getUserFoodEntries,
+  );
+
   app.post(
-    '/api/users/:userId/entries',
+    '/api/entries',
     [verifyToken, checkIfUserIsExisted],
     foodEntryController.createFoodEntry,
   );
 
   app.put(
-    '/api/users/:userId/entries/:entryId',
+    '/api/entries/:entryId',
     [verifyToken, checkIfUserIsExisted],
     foodEntryController.updateFoodEntry,
+  );
+
+  app.delete(
+    '/api/entries/:entryId',
+    [verifyToken, checkIfUserIsExisted],
+    foodEntryController.deleteFoodEntry,
+  );
+
+  app.get(
+    '/api/entries/:entryId',
+    [verifyToken, checkIfUserIsExisted],
+    foodEntryController.getFoodEntryById,
   );
 }

@@ -20,7 +20,7 @@ export function verifyToken(req, res, next) {
     config.secret,
     (err, decoded) => {
       if (err) {
-        return res.status(HTTPStatuses).send({
+        return res.status(HTTPStatuses.UNAUTHORIZED).send({
           message: 'Unauthorized!',
         });
       }

@@ -8,7 +8,6 @@ export enum MEALS {
 export enum HTTPStatuses {
   'SUCCESS' = 200,
   'CREATED_ONCE_SUCCESS' = 201,
-  'DELETE_OR_PUT_SUCCESS' = 201,
   'UNAUTHENTICATED' = 401,
   'UNAUTHORIZED' = 403,
   'NOT_FOUND' = 404,
