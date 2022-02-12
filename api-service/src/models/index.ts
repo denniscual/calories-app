@@ -42,7 +42,7 @@ db.user.belongsToMany(db.role, {
   otherKey: 'roleId',
 });
 // One-To-One relationship.
-db.user.hasOne(db.foodEntry, {
+db.user.hasMany(db.foodEntry, {
   foreignKey: {
     allowNull: false,
     name: 'userId',

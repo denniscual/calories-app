@@ -2,6 +2,7 @@ import db from '../models';
 
 const ROLES = db.ROLES;
 const User = db.user;
+const FoodEntry = db.foodEntry;
 
 export function checkDuplicateUsernameOrEmail(req, res, next) {
   // Username
@@ -9,6 +10,7 @@ export function checkDuplicateUsernameOrEmail(req, res, next) {
     where: {
       username: req.body.username,
     },
+    include: FoodEntry,
   }).then((user) => {
     if (user) {
       res.status(400).send({

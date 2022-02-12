@@ -10,15 +10,19 @@ export default function FoodEntryModel(sequelize: RootSequelize.Sequelize) {
     },
     name: {
       type: RootSequelize.STRING,
+      allowNull: false,
     },
     numOfCalories: {
-      type: RootSequelize.INTEGER,
+      type: RootSequelize.FLOAT,
+      allowNull: false,
     },
     price: {
-      type: RootSequelize.INTEGER,
+      type: RootSequelize.FLOAT,
+      allowNull: false,
     },
     meal: {
       type: RootSequelize.STRING,
+      allowNull: false,
     },
   });
 }

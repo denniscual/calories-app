@@ -16,7 +16,7 @@ export default function UserModel(sequelize: RootSequelize.Sequelize): any {
       type: RootSequelize.STRING,
     },
     email: {
-      allowNull: true,
+      allowNull: false,
       type: RootSequelize.STRING,
     },
     password: {

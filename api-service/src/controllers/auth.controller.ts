@@ -10,18 +10,22 @@ const Role = db.role;
 const Op = db.Sequelize.Op;
 
 export const signup: RequestHandler = (req, res) => {
+  const { body } = req;
   // Save User to Database
   User.create({
-    username: req.body.username,
-    email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8),
+    username: body.username,
+    password: bcrypt.hashSync(body.password, 8),
+    fullName: body.fullName,
+    email: body.email,
+    maxCalories: body.maxCalories,
+    maxPricePerMonth: body.maxPricePerMonth,
   })
     .then((user) => {
       if (req.body.roles) {
         Role.findAll({
           where: {
             name: {
-              [Op.or]: req.body.roles,
+              [Op.or]: body.roles,
             },
           },
         }).then((roles) => {
@@ -31,8 +35,7 @@ export const signup: RequestHandler = (req, res) => {
               createResponseMessage('User registered successfully!', {
                 id: user.id,
                 username: user.username,
-                email: user.email,
-                roles,
+                roles: roles.map((role) => role.name),
                 accessToken: token,
               }),
             );
@@ -85,7 +88,7 @@ export const signin: RequestHandler = (req, res) => {
             maxPricePerMonth: user.maxPricePerMonth,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
-            roles,
+            roles: roles.map((role) => role.name),
             accessToken: token,
           }),
         );
