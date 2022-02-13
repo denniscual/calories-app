@@ -2,63 +2,22 @@ import db from '../models';
 import { RequestHandler } from 'express';
 import { createResponseMessage, HTTPStatuses } from '../utils';
 import moment from 'moment';
+import _ from 'lodash';
 
-// TODO:
-// - move this ine to User routes.
-// - when using calendar to add food entries, send `createdAt` and `updatedAt` in UTC or in local dates then convert in the server the dates in UTC.
-export const getUserFoodEntries: RequestHandler = async (req, res) => {
+export const getFoodEntries: RequestHandler = async (req, res) => {
   try {
-    // This logic should be exluded in this controller. This should be in controller of food entries named "getWeeksReport" controller.
-    // Last 7 days food entries
-    const [utcStartDate, utcEndDate] = createLast7DaysDateRange(moment().utc());
-    // TODO:
-    // - compute last last 7 days food entries on top of "last 7 days" computation.
-    const last7DaysFoodEntries = await db.foodEntry.findAll({
-      where: {
-        [db.Sequelize.Op.or]: {
-          createdAt: {
-            [db.Sequelize.Op.between]: [utcStartDate, utcEndDate],
-          },
-        },
-      },
-    });
-
-    const weekBeforeLast7DaysFoodEntries = await db.foodEntry.findAll({
-      where: {
-        [db.Sequelize.Op.or]: {
-          createdAt: {
-            [db.Sequelize.Op.between]: createLast7DaysDateRange(
-              utcStartDate.clone(),
-            ),
-          },
-        },
-      },
-    });
-
-    console.log(
-      'last7Days',
-      last7DaysFoodEntries.map((entry) => entry.toJSON()),
-    );
-    console.log(
-      'weekBefore',
-      weekBeforeLast7DaysFoodEntries.map((entry) => entry.toJSON()),
-    );
-
     const foodEntries = await db.foodEntry.findAll({
-      where: {
-        // @ts-expect-error Accessing non-standard `Request` object.
-        userId: req.userId,
-      },
+      include: db.user,
+      raw: true,
+      nest: true,
     });
-
-    const mappedFoodEntries = foodEntries.map((entry) => entry.toJSON());
 
     res
-      .status(HTTPStatuses.CREATED_ONCE_SUCCESS)
+      .status(HTTPStatuses.SUCCESS)
       .send(
         createResponseMessage(
-          'Successfully get all food entries.',
-          mappedFoodEntries,
+          'Food entries retrieved successfully.',
+          foodEntries,
         ),
       );
   } catch (err) {
@@ -72,18 +31,15 @@ export const getFoodEntryById: RequestHandler = async (req, res) => {
   const { params } = req;
 
   try {
-    const entry = await db.foodEntry.findByPk(params.entryId);
+    const entry = await db.foodEntry.findByPk(params.entryId, {
+      include: db.user,
+      raw: true,
+      nest: true,
+    });
 
-    res.status(HTTPStatuses.CREATED_ONCE_SUCCESS).send(
-      createResponseMessage('Food retrieved sucessfully.', {
-        id: entry.id,
-        name: entry.name,
-        numOfCalories: entry.numOfCalories,
-        price: entry.price,
-        meal: entry.meal,
-        createdAt: entry.createdAt,
-      }),
-    );
+    res
+      .status(HTTPStatuses.CREATED_ONCE_SUCCESS)
+      .send(createResponseMessage('Food retrieved sucessfully.', entry));
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)
@@ -96,24 +52,24 @@ export const createFoodEntry: RequestHandler = async (req, res) => {
   const { body } = req;
 
   try {
-    const entry = await db.foodEntry.create({
-      userId: body.userId,
-      name: body.name,
-      numOfCalories: body.numOfCalories,
-      price: body.price,
-      meal: body.meal,
-    });
-
-    res.status(HTTPStatuses.CREATED_ONCE_SUCCESS).send(
-      createResponseMessage('Food registered successfully.', {
-        id: entry.id,
-        name: entry.name,
-        numOfCalories: entry.numOfCalories,
-        price: entry.price,
-        meal: entry.meal,
-        createdAt: entry.createdAt,
-      }),
+    const entry = await db.foodEntry.create(
+      {
+        userId: body.userId,
+        name: body.name,
+        numOfCalories: body.numOfCalories,
+        price: body.price,
+        meal: body.meal,
+      },
+      {
+        include: db.user,
+        raw: true,
+        nest: true,
+      },
     );
+
+    res
+      .status(HTTPStatuses.CREATED_ONCE_SUCCESS)
+      .send(createResponseMessage('Food registered successfully.', entry));
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)
@@ -139,7 +95,11 @@ export const updateFoodEntry: RequestHandler = async (req, res) => {
         },
       },
     );
-    const updatedFoodEntry = await db.foodEntry.findByPk(params.entryId);
+    const updatedFoodEntry = await db.foodEntry.findByPk(params.entryId, {
+      include: db.user,
+      raw: true,
+      nest: true,
+    });
 
     if (updateFoodEntry === null) {
       res
@@ -148,17 +108,14 @@ export const updateFoodEntry: RequestHandler = async (req, res) => {
       return;
     }
 
-    res.status(HTTPStatuses.SUCCESS).send(
-      createResponseMessage('Food updated successfully.', {
-        id: updatedFoodEntry.id,
-        name: updatedFoodEntry.name,
-        numOfCalories: updatedFoodEntry.numOfCalories,
-        price: updatedFoodEntry.price,
-        meal: updatedFoodEntry.meal,
-        createdAt: updatedFoodEntry.createdAt,
-        updatedAt: updatedFoodEntry.updatedAt,
-      }),
-    );
+    res
+      .status(HTTPStatuses.SUCCESS)
+      .send(
+        createResponseMessage(
+          'Food entry updated successfully.',
+          updatedFoodEntry,
+        ),
+      );
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)
@@ -178,7 +135,60 @@ export const deleteFoodEntry: RequestHandler = async (req, res) => {
 
     res
       .status(HTTPStatuses.SUCCESS)
-      .send(createResponseMessage('Food deleted successfully.'));
+      .send(createResponseMessage('Food entry deleted successfully.'));
+  } catch (err) {
+    res
+      .status(HTTPStatuses.BAD_REQUEST)
+      .send(createResponseMessage(err.message));
+  }
+};
+
+export const getFoodEntriesReport: RequestHandler = async (req, res) => {
+  try {
+    if (req.query.date === undefined) {
+      throw new Error('Request query string "date" is required.');
+    }
+    const [utcStartDate, utcEndDate] = createLast7DaysDateRange(
+      moment(req.query.date as string),
+    );
+    const last7DaysFoodEntries = await db.foodEntry.findAll({
+      where: {
+        [db.Sequelize.Op.or]: {
+          createdAt: {
+            [db.Sequelize.Op.between]: [utcStartDate, utcEndDate],
+          },
+        },
+      },
+      raw: true,
+      nest: true,
+    });
+
+    const groupedByDateEntries = _.groupBy(last7DaysFoodEntries, (entry) => {
+      return moment(entry.createdAt).format('YYYY-MM-DD');
+    });
+
+    const sortedByDateEntries = _.toPairs(groupedByDateEntries)
+      // @ts-expect-error The left-hand/righ-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
+      .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+      .map((dateCollection) => {
+        const collection = dateCollection[1];
+        return {
+          date: moment(dateCollection[0]).format('LL'),
+          numOfFoodEntries: collection.length,
+        };
+      });
+
+    const totalNumOfFoodEntries = sortedByDateEntries.reduce(
+      (acc, value) => acc + value.numOfFoodEntries,
+      0,
+    );
+
+    res.status(HTTPStatuses.SUCCESS).send(
+      createResponseMessage('Food entries retrieved successfully.', {
+        totalNumOfFoodEntries,
+        dataPoints: sortedByDateEntries,
+      }),
+    );
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)

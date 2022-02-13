@@ -48,6 +48,9 @@ db.user.hasMany(db.foodEntry, {
     name: 'userId',
   },
 });
+db.foodEntry.belongsTo(db.user, {
+  foreignKey: 'userId',
+});
 
 db.ROLES = ['ROLE_ADMIN', 'ROLE_USER'];
 

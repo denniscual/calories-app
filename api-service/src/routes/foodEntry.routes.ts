@@ -1,4 +1,4 @@
-import { checkIfUserIsExisted, verifyToken } from '../middleware';
+import { checkIfUserIsExisted, isAdmin, verifyToken } from '../middleware';
 import * as foodEntryController from '../controllers/foodEntry.controller';
 
 export default function (app) {
@@ -12,14 +12,20 @@ export default function (app) {
 
   app.get(
     '/api/entries',
-    [verifyToken, checkIfUserIsExisted],
-    foodEntryController.getUserFoodEntries,
+    [verifyToken, checkIfUserIsExisted, isAdmin],
+    foodEntryController.getFoodEntries,
   );
 
   app.post(
     '/api/entries',
     [verifyToken, checkIfUserIsExisted],
     foodEntryController.createFoodEntry,
+  );
+
+  app.get(
+    '/api/entries/:entryId',
+    [verifyToken, checkIfUserIsExisted],
+    foodEntryController.getFoodEntryById,
   );
 
   app.put(
@@ -35,8 +41,8 @@ export default function (app) {
   );
 
   app.get(
-    '/api/entries/:entryId',
-    [verifyToken, checkIfUserIsExisted],
-    foodEntryController.getFoodEntryById,
+    '/api/entries/report',
+    [verifyToken, checkIfUserIsExisted, isAdmin],
+    foodEntryController.getFoodEntriesReport,
   );
 }
