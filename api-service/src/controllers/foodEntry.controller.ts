@@ -12,14 +12,12 @@ export const getFoodEntries: RequestHandler = async (req, res) => {
       nest: true,
     });
 
-    res
-      .status(HTTPStatuses.SUCCESS)
-      .send(
-        createResponseMessage(
-          'Food entries retrieved successfully.',
-          foodEntries,
-        ),
-      );
+    res.status(HTTPStatuses.SUCCESS).send(
+      createResponseMessage('Food entries retrieved successfully.', {
+        foodEntries,
+        count: foodEntries.length,
+      }),
+    );
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)
@@ -31,6 +29,10 @@ export const getFoodEntryById: RequestHandler = async (req, res) => {
   const { params } = req;
 
   try {
+    if (params.entryId === undefined) {
+      throw new Error('Request query string "entryId" is required.');
+    }
+
     const entry = await db.foodEntry.findByPk(params.entryId, {
       include: db.user,
       raw: true,
@@ -39,7 +41,7 @@ export const getFoodEntryById: RequestHandler = async (req, res) => {
 
     res
       .status(HTTPStatuses.CREATED_ONCE_SUCCESS)
-      .send(createResponseMessage('Food retrieved sucessfully.', entry));
+      .send(createResponseMessage('Food entry retrieved sucessfully.', entry));
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)
@@ -69,7 +71,9 @@ export const createFoodEntry: RequestHandler = async (req, res) => {
 
     res
       .status(HTTPStatuses.CREATED_ONCE_SUCCESS)
-      .send(createResponseMessage('Food registered successfully.', entry));
+      .send(
+        createResponseMessage('Food entry registered successfully.', entry),
+      );
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)
@@ -174,12 +178,12 @@ export const getFoodEntriesReport: RequestHandler = async (req, res) => {
         const collection = dateCollection[1];
         return {
           date: moment(dateCollection[0]).format('LL'),
-          numOfFoodEntries: collection.length,
+          foodEntriesCount: collection.length,
         };
       });
 
     const totalNumOfFoodEntries = sortedByDateEntries.reduce(
-      (acc, value) => acc + value.numOfFoodEntries,
+      (acc, value) => acc + value.foodEntriesCount,
       0,
     );
 

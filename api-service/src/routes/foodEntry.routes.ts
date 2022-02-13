@@ -16,6 +16,12 @@ export default function (app) {
     foodEntryController.getFoodEntries,
   );
 
+  app.get(
+    '/api/entries/report',
+    [verifyToken, checkIfUserIsExisted, isAdmin],
+    foodEntryController.getFoodEntriesReport,
+  );
+
   app.post(
     '/api/entries',
     [verifyToken, checkIfUserIsExisted],
@@ -38,11 +44,5 @@ export default function (app) {
     '/api/entries/:entryId',
     [verifyToken, checkIfUserIsExisted],
     foodEntryController.deleteFoodEntry,
-  );
-
-  app.get(
-    '/api/entries/report',
-    [verifyToken, checkIfUserIsExisted, isAdmin],
-    foodEntryController.getFoodEntriesReport,
   );
 }
