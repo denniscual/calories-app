@@ -1,26 +1,15 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import { Login } from "./Login";
 
 export function App() {
   return (
     <div>
-      <header>
-        <div>
-          <Link to="/">Home</Link>
-        </div>
-        <div>
-          <Link to="/about">About</Link>
-        </div>
-      </header>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Login />} />
         <Route path="about" element={<About />} />
       </Routes>
     </div>
   );
-}
-
-function Home() {
-  return <div>home</div>;
 }
 
 function About() {
