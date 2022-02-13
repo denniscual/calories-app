@@ -7,7 +7,7 @@ import { useMutation } from "react-query";
 import { queryClient } from "api";
 import { useState, useContext } from "react";
 
-export function Login() {
+export default function Login() {
   return (
     <Stack
       spacing={6}

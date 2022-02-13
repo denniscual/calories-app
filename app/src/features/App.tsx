@@ -1,8 +1,9 @@
 import { Route, Routes } from "react-router-dom";
-import { Login } from "./Login";
-import { Suspense, useContext } from "react";
+import { Suspense, useContext, lazy } from "react";
 import { AuthContext } from "api";
-import { Dashboard } from "./Dashboard";
+
+const LazyLogin = lazy(() => import("./Login"));
+const LazyDashboard = lazy(() => import("./Dashboard"));
 
 export function App() {
   const [auth] = useContext(AuthContext);
@@ -12,7 +13,7 @@ export function App() {
         <Routes>
           <Route
             path="/"
-            element={auth.id === "" ? <Login /> : <Dashboard />}
+            element={auth.id === "" ? <LazyLogin /> : <LazyDashboard />}
           ></Route>
         </Routes>
       </Suspense>

@@ -3,7 +3,7 @@ import { AuthContext } from "api";
 import { useContext } from "react";
 
 // We need to render a view depending on the "loggedUser" roles.
-export function Dashboard() {
+export default function Dashboard() {
   const [auth] = useContext(AuthContext);
 
   if (auth.roles.includes("ROLE_ADMIN")) {
