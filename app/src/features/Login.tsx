@@ -2,10 +2,10 @@ import { Stack, Typography, Paper } from "@mui/material";
 import { useFormik } from "formik";
 import { Button, TextField, Snackbar } from "components";
 import * as Yup from "yup";
-import { signin } from "api/auth.service";
+import { signin, AuthContext } from "api";
 import { useMutation } from "react-query";
 import { queryClient } from "api";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 export function Login() {
   return (
@@ -42,10 +42,15 @@ export function Login() {
 }
 
 function LoginForm() {
+  const [, setAuth] = useContext(AuthContext);
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const mutation = useMutation(signin, {
-    onSuccess() {
+    onSuccess(data) {
+      setAuth({
+        id: data.id,
+        roles: data.roles,
+      });
       // Invalidate and refetch
       queryClient.invalidateQueries("loggedUser");
     },
