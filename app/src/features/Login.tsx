@@ -85,6 +85,7 @@ function LoginForm() {
         <TextField
           id="password"
           label="Password"
+          type="password"
           error={Boolean(
             formik.getFieldMeta("password").touched && formik.errors.password
           )}

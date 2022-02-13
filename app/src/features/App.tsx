@@ -13,7 +13,7 @@ export function App() {
           <Route
             path="/"
             element={auth.id === "" ? <Login /> : <Dashboard />}
-          />
+          ></Route>
         </Routes>
       </Suspense>
     </div>
