@@ -1,6 +1,11 @@
 import db from '../models';
 import { RequestHandler } from 'express';
-import { createResponseMessage, HTTPStatuses } from '../utils';
+import {
+  createLast7DaysDateRange,
+  createRangeDates,
+  createResponseMessage,
+  HTTPStatuses,
+} from '../utils';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -152,14 +157,14 @@ export const getFoodEntriesReport: RequestHandler = async (req, res) => {
     if (req.query.date === undefined) {
       throw new Error('Request query string "date" is required.');
     }
-    const [utcStartDate, utcEndDate] = createLast7DaysDateRange(
+    const [startDate, endDate] = createLast7DaysDateRange(
       moment(req.query.date as string),
     );
     const last7DaysFoodEntries = await db.foodEntry.findAll({
       where: {
         [db.Sequelize.Op.or]: {
           createdAt: {
-            [db.Sequelize.Op.between]: [utcStartDate, utcEndDate],
+            [db.Sequelize.Op.between]: [startDate, endDate],
           },
         },
       },
@@ -171,18 +176,35 @@ export const getFoodEntriesReport: RequestHandler = async (req, res) => {
       return moment(entry.createdAt).format('YYYY-MM-DD');
     });
 
-    const sortedByDateEntries = _.toPairs(groupedByDateEntries)
-      // @ts-expect-error The left-hand/righ-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
-      .sort((a, b) => new Date(a[0]) - new Date(b[0]))
-      .map((dateCollection) => {
+    const datesWithFoodEntriesCount = _.toPairs(groupedByDateEntries).map(
+      (dateCollection) => {
         const collection = dateCollection[1];
         return {
-          date: moment(dateCollection[0]).format('LL'),
+          date: moment(dateCollection[0]).local().format('MMM DD YYYY'),
           foodEntriesCount: collection.length,
         };
-      });
+      },
+    );
 
-    const totalNumOfFoodEntries = sortedByDateEntries.reduce(
+    const rangeDatesWithFoodEntriesCount = createRangeDates(startDate).map(
+      (date) => ({
+        date: date.date,
+        foodEntriesCount: 0,
+      }),
+    );
+    const sortedDatesWithFoodEntriesCount = rangeDatesWithFoodEntriesCount.map(
+      (rangeDate) => {
+        const foundDate = datesWithFoodEntriesCount.find(
+          (date) => date.date === rangeDate.date,
+        );
+        return {
+          ...rangeDate,
+          foodEntriesCount: foundDate?.foodEntriesCount ?? 0,
+        };
+      },
+    );
+
+    const totalNumOfFoodEntries = sortedDatesWithFoodEntriesCount.reduce(
       (acc, value) => acc + value.foodEntriesCount,
       0,
     );
@@ -190,7 +212,7 @@ export const getFoodEntriesReport: RequestHandler = async (req, res) => {
     res.status(HTTPStatuses.SUCCESS).send(
       createResponseMessage('Food entries retrieved successfully.', {
         totalNumOfFoodEntries,
-        dataPoints: sortedByDateEntries,
+        dataPoints: sortedDatesWithFoodEntriesCount,
       }),
     );
   } catch (err) {
@@ -199,8 +221,3 @@ export const getFoodEntriesReport: RequestHandler = async (req, res) => {
       .send(createResponseMessage(err.message));
   }
 };
-
-function createLast7DaysDateRange(utcEndDate) {
-  const utcStartDate = utcEndDate.clone().subtract(6, 'days');
-  return [utcStartDate, utcEndDate];
-}

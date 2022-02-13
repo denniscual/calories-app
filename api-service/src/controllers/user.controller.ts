@@ -1,7 +1,15 @@
 import { RequestHandler } from 'express';
 import db from '../models';
-import { createResponseMessage, HTTPStatuses } from '../utils';
+import {
+  createLast7DaysDateRange,
+  createRangeDates,
+  createResponseMessage,
+  HTTPStatuses,
+  roundOff2DecimalPlaces,
+} from '../utils';
 import Sequelize from 'sequelize';
+import moment from 'moment';
+import _ from 'lodash';
 
 export const getUsers: RequestHandler = async (req, res) => {
   try {
@@ -105,4 +113,81 @@ export const getUserFoodEntries: RequestHandler = async (req, res) => {
   }
 };
 
-export const getUserFoodEntriesReport: RequestHandler = async (req, res) => {};
+export const getUserFoodEntriesReport: RequestHandler = async (req, res) => {
+  const { params } = req;
+  try {
+    if (params.userId === undefined) {
+      throw new Error('Request query string "userId" is required.');
+    }
+
+    const [startDate, endDate] = createLast7DaysDateRange(moment().local());
+
+    const last7DaysFoodEntries = await db.foodEntry.findAll({
+      where: {
+        userId: params.userId,
+        [db.Sequelize.Op.or]: {
+          createdAt: {
+            [db.Sequelize.Op.between]: [startDate, endDate],
+          },
+        },
+      },
+      raw: true,
+      nest: true,
+    });
+
+    const groupedByDateEntries = _.groupBy(last7DaysFoodEntries, (entry) => {
+      return moment(entry.createdAt).startOf('day').format('YYYY-MM-DD');
+    });
+
+    const datesWithTotalNumOfCalories = _.toPairs(groupedByDateEntries).map(
+      (dayCollection) => {
+        const collection = dayCollection[1];
+        return {
+          date: moment(dayCollection[0]).local().format('MMM DD YYYY'),
+          totalNumOfCalories: roundOff2DecimalPlaces(
+            collection.reduce((acc, value) => acc + value.numOfCalories, 0),
+          ),
+        };
+      },
+    );
+
+    const rangeDatesWithTotalNumOfCalories = createRangeDates(startDate).map(
+      (date) => ({
+        date: date.date,
+        totalNumOfCalories: 0,
+      }),
+    );
+
+    const sortedDatesWithTotalNumOfCalories =
+      rangeDatesWithTotalNumOfCalories.map((rangeDate) => {
+        const foundDate = datesWithTotalNumOfCalories.find(
+          (date) => date.date === rangeDate.date,
+        );
+        return {
+          ...rangeDate,
+          totalNumOfCalories: foundDate?.totalNumOfCalories ?? 0,
+        };
+      });
+
+    const totalCaloriesPerWeek = sortedDatesWithTotalNumOfCalories.reduce(
+      (acc, value) => acc + value.totalNumOfCalories,
+      0,
+    );
+
+    res.status(HTTPStatuses.SUCCESS).send(
+      createResponseMessage(
+        'User food entries report retrieved successfully.',
+        {
+          averageNumOfCalories: roundOff2DecimalPlaces(
+            totalCaloriesPerWeek / sortedDatesWithTotalNumOfCalories.length,
+          ),
+          dataPoints: sortedDatesWithTotalNumOfCalories,
+        },
+      ),
+    );
+  } catch (err) {
+    res
+      .status(HTTPStatuses.BAD_REQUEST)
+      .send(createResponseMessage(err.message));
+  }
+};

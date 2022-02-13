@@ -28,4 +28,10 @@ export default function (app) {
     [verifyToken, checkIfUserIsExisted],
     userController.getUserFoodEntries,
   );
+
+  app.get(
+    '/api/users/:userId/entries/report',
+    [verifyToken, checkIfUserIsExisted, isAdmin],
+    userController.getUserFoodEntriesReport,
+  );
 }
