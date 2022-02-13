@@ -8,15 +8,13 @@ const LazyDashboard = lazy(() => import("./Dashboard"));
 export function App() {
   const [auth] = useContext(AuthContext);
   return (
-    <div>
-      <Suspense fallback={<div>Loading ...</div>}>
-        <Routes>
-          <Route
-            path="/"
-            element={auth.id === "" ? <LazyLogin /> : <LazyDashboard />}
-          ></Route>
-        </Routes>
-      </Suspense>
-    </div>
+    <Suspense fallback={<div>Loading ...</div>}>
+      <Routes>
+        <Route
+          path="/"
+          element={auth.id === "" ? <LazyLogin /> : <LazyDashboard />}
+        ></Route>
+      </Routes>
+    </Suspense>
   );
 }
