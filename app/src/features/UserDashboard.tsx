@@ -15,7 +15,7 @@ export default function UserDashboard() {
   return (
     <PageLayout
       topBar={
-        <TopBar fullName="Irish">
+        <TopBar fullName="Zion">
           <DatePickerPopover
             value={searchParams.get("date") as string}
             onChange={(date) => {

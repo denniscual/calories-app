@@ -94,6 +94,10 @@ export function useAuth() {
   return useContext(AuthContext);
 }
 
+export function useLoggedUser() {
+  return useAuth()[0];
+}
+
 export function hasUser({ id }: LoggedUserType) {
   return id !== "";
 }
