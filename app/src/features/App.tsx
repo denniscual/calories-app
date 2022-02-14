@@ -1,20 +1,41 @@
 import { Route, Routes } from "react-router-dom";
-import { Suspense, useContext, lazy } from "react";
-import { AuthContext } from "api";
+import { useAuth, isAdmin, hasUser } from "api";
+import Login from "./Login";
+import AdminDashboard from "./AdminDashboard";
+import UserDashboard from "./UserDashboard";
+import { useMemo } from "react";
+import UserFoodEntries from "./UserFoodEntries";
+import Reports from "./Reports";
+import Users from "./Users";
 
-const LazyLogin = lazy(() => import("./Login"));
-const LazyDashboard = lazy(() => import("./Dashboard"));
+export default function App() {
+  const [auth] = useAuth();
+  const routeEl = useMemo(() => {
+    if (!hasUser(auth)) {
+      return <Route path="/" element={<Login />}></Route>;
+    } else {
+      if (isAdmin(auth)) {
+        return (
+          <Route path="/admin" element={<AdminDashboard />}>
+            <Route index element={<Users />} />
+            <Route path="reports" element={<Reports />} />
+          </Route>
+        );
+      }
+      return (
+        <Route path="/" element={<UserDashboard />}>
+          <Route index element={<UserFoodEntries />} />
+        </Route>
+      );
+    }
+  }, [auth]);
 
-export function App() {
-  const [auth] = useContext(AuthContext);
   return (
-    <Suspense fallback={<div>Loading ...</div>}>
+    <div>
       <Routes>
-        <Route
-          path="/"
-          element={auth.id === "" ? <LazyLogin /> : <LazyDashboard />}
-        ></Route>
+        {routeEl}
+        <Route path="*" element={<div>No route matched</div>} />
       </Routes>
-    </Suspense>
+    </div>
   );
 }

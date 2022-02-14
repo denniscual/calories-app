@@ -1,2 +1,1 @@
-export * from "./App";
-export * from "./Root";
+export { default as Root } from "./Root";

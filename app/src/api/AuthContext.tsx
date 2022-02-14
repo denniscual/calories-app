@@ -8,8 +8,10 @@ import {
   FC,
   useMemo,
 } from "react";
+import { useNavigate } from "react-router-dom";
+import { SigninDataResponse } from "./auth.service";
 
-interface LoggedUserType {
+export interface LoggedUserType {
   id: string;
   roles: string[];
 }
@@ -51,12 +53,51 @@ export const AuthContextProvider: FC = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+export function useLoginUser() {
+  const [, setAuth] = useAuth();
+  const navigate = useNavigate();
+
+  return function login({ accessToken, ...loggedUser }: SigninDataResponse) {
+    try {
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...loggedUser,
+          accessToken,
+        })
+      );
+      setAuth(loggedUser);
+
+      const to = isAdmin(loggedUser) ? "/admin" : "/";
+      navigate(to, {
+        replace: true,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+}
+
 export function useLogoutUser() {
-  const [, setAuth] = useContext(AuthContext);
-  function logout() {
+  const navigate = useNavigate();
+  const [, setAuth] = useAuth();
+
+  return function logout() {
     setAuth(initLoggedUser);
     // Remote the token.
     localStorage.removeItem("user");
-  }
-  return logout;
+    navigate("/");
+  };
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export function hasUser({ id }: LoggedUserType) {
+  return id !== "";
+}
+
+export function isAdmin({ roles }: LoggedUserType) {
+  return roles.includes("ROLE_ADMIN");
 }

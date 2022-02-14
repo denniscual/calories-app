@@ -1,7 +1,6 @@
-import { useContext } from "react";
 import Button from "@mui/material/Button";
 import Typhography from "@mui/material/Typography";
-import { useLogoutUser, AuthContext } from "api";
+import { useLogoutUser, useAuth } from "api";
 import { DatePickerPopover } from "components";
 import { generateGreetings } from "utils";
 
@@ -11,7 +10,7 @@ interface TopBarProps {
 
 export default function TopBar({ fullName }: TopBarProps) {
   const logoutUser = useLogoutUser();
-  const [auth] = useContext(AuthContext);
+  const [auth] = useAuth();
   const isUser = auth.roles.includes("ROLE_USER");
   const welcomeMessage = `${generateGreetings()}, ${fullName}!`;
 

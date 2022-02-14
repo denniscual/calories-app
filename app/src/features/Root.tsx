@@ -1,5 +1,5 @@
 import { StrictMode } from "react";
-import { App } from "./App";
+import App from "./App";
 import { ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter } from "react-router-dom";
 import theme from "theme";
@@ -13,18 +13,18 @@ import "@fontsource/roboto/700.css";
 import AdapterMoment from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
-export function Root() {
+export default function Root() {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <LocalizationProvider dateAdapter={AdapterMoment}>
-            <AuthContextProvider>
-              <BrowserRouter>
+            <BrowserRouter>
+              <AuthContextProvider>
                 <App />
-              </BrowserRouter>
-            </AuthContextProvider>
+              </AuthContextProvider>
+            </BrowserRouter>
           </LocalizationProvider>
         </ThemeProvider>
       </QueryClientProvider>
