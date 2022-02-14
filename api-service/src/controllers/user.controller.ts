@@ -91,6 +91,9 @@ export const getUserFoodEntries: RequestHandler = async (req, res) => {
     }
     const user = await db.user.findByPk(params.userId, {
       include: db.foodEntry,
+      where: {
+        userId: params.userId,
+      },
     });
     if (user === null) {
       res
@@ -99,11 +102,16 @@ export const getUserFoodEntries: RequestHandler = async (req, res) => {
       return;
     }
 
-    const foodEntries = user.foodEntries.map((entry) => entry.toJSON());
+    // TODO:
+    // - here we need to filter the foodEntries based on the the provided date.
+
     res.status(HTTPStatuses.SUCCESS).send(
       createResponseMessage('User food entries retrieved successfully.', {
-        foodEntries,
-        count: foodEntries.length,
+        id: user.id,
+        fullName: user.fullName,
+        maxCalories: user.maxCalories,
+        maxPricePerMonth: user.maxPricePerMonth,
+        foodEntries: user.foodEntries,
       }),
     );
   } catch (err) {

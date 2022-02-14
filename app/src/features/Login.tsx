@@ -4,7 +4,6 @@ import { Button, TextField, Snackbar } from "components";
 import * as Yup from "yup";
 import { signin, useLoginUser, SigninInput, SigninDataResponse } from "api";
 import { useMutation } from "react-query";
-import { queryClient } from "api";
 import { useState } from "react";
 
 export default function Login() {
@@ -48,8 +47,6 @@ function LoginForm() {
   const mutation = useMutation<SigninDataResponse, Error, SigninInput>(signin, {
     onSuccess(data) {
       login(data);
-      // Invalidate and refetch
-      queryClient.invalidateQueries("loggedUser");
     },
     onError(err) {
       setOpenSnackbar(true);
