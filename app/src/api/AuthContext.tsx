@@ -14,6 +14,7 @@ import { SigninDataResponse } from "./auth.service";
 export interface LoggedUserType {
   id: string;
   roles: string[];
+  fullName: string;
 }
 
 type AuthContextType = [
@@ -24,6 +25,7 @@ type AuthContextType = [
 const initLoggedUser: LoggedUserType = {
   id: "",
   roles: [],
+  fullName: "",
 };
 export const AuthContext = createContext<AuthContextType>([
   initLoggedUser,
@@ -41,6 +43,7 @@ export const AuthContextProvider: FC = ({ children }) => {
         setAuth({
           id: parsed.id,
           roles: parsed.roles,
+          fullName: parsed.fullName,
         });
       }
     } catch (err) {

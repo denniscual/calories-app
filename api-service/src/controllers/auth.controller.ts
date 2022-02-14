@@ -79,6 +79,8 @@ export const signin: RequestHandler = (req, res) => {
       const token = generateToken(user.id);
 
       user.getRoles().then((roles) => {
+        // setTimeout(() => {
+        // }, 3000);
         res.status(HTTPStatuses.SUCCESS).send(
           createResponseMessage('Successfully signed in', {
             id: user.id,

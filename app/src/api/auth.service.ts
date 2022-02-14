@@ -8,6 +8,7 @@ export interface SigninDataResponse {
   id: string;
   roles: string[];
   accessToken: string;
+  fullName: string;
 }
 
 export async function signin(

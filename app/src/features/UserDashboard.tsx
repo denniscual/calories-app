@@ -5,8 +5,10 @@ import { Outlet } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePickerPopover } from "components";
+import { useLoggedUser } from "api";
 
 export default function UserDashboard() {
+  const loggedUser = useLoggedUser();
   const now = moment().format("YYYY-MM-DD");
   let [searchParams, setSearchParams] = useSearchParams({
     date: now,
@@ -15,7 +17,7 @@ export default function UserDashboard() {
   return (
     <PageLayout
       topBar={
-        <TopBar fullName="Zion">
+        <TopBar fullName={loggedUser.fullName}>
           <DatePickerPopover
             value={searchParams.get("date") as string}
             onChange={(date) => {

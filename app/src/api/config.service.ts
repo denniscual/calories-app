@@ -6,7 +6,7 @@ const commonHeaders = {
 
 export const httpService = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
-  timeout: 1000,
+  timeout: 10000,
   headers: {
     ...commonHeaders,
   },
