@@ -1,17 +1,19 @@
 import Button from "@mui/material/Button";
 import Typhography from "@mui/material/Typography";
-import { useLogoutUser, useAuth } from "api";
+import { useLogoutUser } from "api";
 import { DatePickerPopover } from "components";
 import { generateGreetings } from "utils";
 
 interface TopBarProps {
   fullName: string;
+  hideDatePicker?: boolean;
 }
 
-export default function TopBar({ fullName }: TopBarProps) {
+export default function TopBar({
+  fullName,
+  hideDatePicker = false,
+}: TopBarProps) {
   const logoutUser = useLogoutUser();
-  const [auth] = useAuth();
-  const isUser = auth.roles.includes("ROLE_USER");
   const welcomeMessage = `${generateGreetings()}, ${fullName}!`;
 
   return (
@@ -30,15 +32,8 @@ export default function TopBar({ fullName }: TopBarProps) {
       >
         {welcomeMessage}
       </Typhography>
-      <div>
-        <DatePickerPopover
-          value="2022-02-14"
-          onChange={(date) => {
-            console.log({ date });
-          }}
-        />
-      </div>
-      {/* {isUser && ( <div>
+      {!hideDatePicker && (
+        <div>
           <DatePickerPopover
             value="2022-02-14"
             onChange={(date) => {
@@ -46,7 +41,7 @@ export default function TopBar({ fullName }: TopBarProps) {
             }}
           />
         </div>
-      )} */}
+      )}
       <div>
         <Button variant="text" color="primary" onClick={logoutUser}>
           Logout

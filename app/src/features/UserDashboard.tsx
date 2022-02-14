@@ -15,7 +15,7 @@ export default function UserDashboard() {
 
 const menuList = [
   {
-    label: "Food entries",
+    label: "Daily Log",
     icon: <KitchenIcon fontSize="small" />,
     to: "",
   },
