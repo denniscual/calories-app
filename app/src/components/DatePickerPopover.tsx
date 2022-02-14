@@ -2,7 +2,7 @@ import { StaticDatePicker, StaticDatePickerProps } from "@mui/lab";
 import { Popover, Button, TextField } from "@mui/material";
 import { useState, MouseEventHandler } from "react";
 
-interface DatePickerPopoverProps {
+export interface DatePickerPopoverProps {
   value: string;
   onChange: StaticDatePickerProps["onChange"];
 }

@@ -7,7 +7,7 @@ import GroupIcon from "@mui/icons-material/Group";
 export default function AdminDashboard() {
   return (
     <PageLayout
-      topBar={<TopBar fullName="Zion" hideDatePicker />}
+      topBar={<TopBar fullName="Zion" />}
       nav={<MenuList items={menuList} />}
       main={<Outlet />}
     />
