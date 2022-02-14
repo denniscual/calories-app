@@ -4,6 +4,7 @@ import TopBar from "./TopBar";
 import { Outlet } from "react-router-dom";
 import GroupIcon from "@mui/icons-material/Group";
 import { useLoggedUser } from "api";
+import { Suspense } from "react";
 
 export default function AdminDashboard() {
   const loggedUser = useLoggedUser();
@@ -11,7 +12,11 @@ export default function AdminDashboard() {
     <PageLayout
       topBar={<TopBar fullName={loggedUser.fullName} />}
       nav={<MenuList items={menuList} />}
-      main={<Outlet />}
+      main={
+        <Suspense fallback={<div>Loading user...</div>}>
+          <Outlet />
+        </Suspense>
+      }
     />
   );
 }

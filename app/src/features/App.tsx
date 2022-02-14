@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import UserFoodEntries from "./UserFoodEntries";
 import Reports from "./Reports";
 import Users from "./Users";
+import { ErrorBoundary } from "react-error-boundary";
 
 export default function App() {
   const [auth] = useAuth();
@@ -32,10 +33,16 @@ export default function App() {
 
   return (
     <div>
-      <Routes>
-        {routeEl}
-        <Route path="*" element={<div>No route matched</div>} />
-      </Routes>
+      <ErrorBoundary FallbackComponent={RootErrorBoundary}>
+        <Routes>
+          {routeEl}
+          <Route path="*" element={<div>No route matched</div>} />
+        </Routes>
+      </ErrorBoundary>
     </div>
   );
+}
+
+function RootErrorBoundary() {
+  return <div>Sorry something went wrong. Please try again later.</div>;
 }
