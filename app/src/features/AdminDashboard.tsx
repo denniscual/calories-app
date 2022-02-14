@@ -1,17 +1,17 @@
 import { Paper, Stack, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import MenuList from "@mui/material/MenuList";
-import MenuItem from "@mui/material/MenuItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ContentCopy from "@mui/icons-material/ContentCopy";
-import ContentPaste from "@mui/icons-material/ContentPaste";
+import KitchenIcon from "@mui/icons-material/Kitchen";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { MenuList } from "components";
+import TopBar from "./TopBar";
+import { useContext } from "react";
+import { AuthContext } from "api";
 
 // TODO:
 // - we need to create a admin dashboard routes.
 // - the main content will be the `Outlet`.
 // - reuse the page layout. Create page layout component.
 export default function AdminDashboard() {
+  const [auth] = useContext(AuthContext);
   return (
     <div
       style={{
@@ -31,14 +31,9 @@ export default function AdminDashboard() {
           gridArea: "header",
           padding: 24,
           margin: "24px 24px 0 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
         }}
       >
-        <div>Good morning Zion!</div>
-        <div>DatePicker</div>
-        <div>Logout button</div>
+        <TopBar fullName="Zion" />
       </Paper>
       <Paper
         style={{
@@ -59,7 +54,7 @@ export default function AdminDashboard() {
           >
             Calories App
           </Typography>
-          <Menu />
+          <MenuList items={menuList} />
         </Stack>
       </Paper>
       <main
@@ -74,33 +69,15 @@ export default function AdminDashboard() {
   );
 }
 
-function Menu() {
-  return (
-    <MenuList component="div">
-      <MenuItem
-        component={Link}
-        to="/entries"
-        style={{
-          padding: "12px 16px",
-        }}
-      >
-        <ListItemIcon>
-          <ContentCopy fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>Food entries</ListItemText>
-      </MenuItem>
-      <MenuItem
-        component={Link}
-        to="/reports"
-        style={{
-          padding: "12px 16px",
-        }}
-      >
-        <ListItemIcon>
-          <ContentPaste fontSize="small" />
-        </ListItemIcon>
-        <ListItemText>Reports</ListItemText>
-      </MenuItem>
-    </MenuList>
-  );
-}
+const menuList = [
+  {
+    label: "Food entries",
+    icon: <KitchenIcon fontSize="small" />,
+    to: "/",
+  },
+  {
+    label: "Reports",
+    icon: <MenuBookIcon fontSize="small" />,
+    to: "/reports",
+  },
+];

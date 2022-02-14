@@ -10,6 +10,8 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import AdapterMoment from "@mui/lab/AdapterMoment";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 
 export function Root() {
   return (
@@ -17,11 +19,13 @@ export function Root() {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <AuthContextProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
-          </AuthContextProvider>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <AuthContextProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </AuthContextProvider>
+          </LocalizationProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </StrictMode>
