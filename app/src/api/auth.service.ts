@@ -11,9 +11,7 @@ export interface SigninDataResponse {
   fullName: string;
 }
 
-export async function signin(
-  formData: SigninInput
-): Promise<SigninDataResponse> {
-  const res = await httpService.post("/auth/signin", formData);
+export async function signin(input: SigninInput): Promise<SigninDataResponse> {
+  const res = await httpService.post("/auth/signin", input);
   return res.data.data;
 }

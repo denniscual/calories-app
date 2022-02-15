@@ -19,7 +19,7 @@ export default function UserDashboard() {
   const [, setDate] = useDate();
   const [, startTransition] = useTransition({ timeoutMs: 5000 });
   const loggedUser = useLoggedUser();
-  let [searchParams, setSearchParams] = useSearchParams({
+  const [searchParams, setSearchParams] = useSearchParams({
     date: moment().format(DEFAULT_DATE_FORMAT),
   });
 

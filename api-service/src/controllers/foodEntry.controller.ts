@@ -54,8 +54,6 @@ export const getFoodEntryById: RequestHandler = async (req, res) => {
   }
 };
 
-// TODO: The `createdAt` and `updatedAt` must be supplied by the client/app.
-// For creating food entry, the `req.body.userId` is the owner of the food entry not the user of the app.
 export const createFoodEntry: RequestHandler = async (req, res) => {
   const { body } = req;
 
@@ -67,6 +65,8 @@ export const createFoodEntry: RequestHandler = async (req, res) => {
         numOfCalories: body.numOfCalories,
         price: body.price,
         meal: body.meal,
+        createdAt: body.createdAt,
+        updatedAt: body.updatedAt,
       },
       {
         include: db.user,
@@ -75,11 +75,13 @@ export const createFoodEntry: RequestHandler = async (req, res) => {
       },
     );
 
-    res
-      .status(HTTPStatuses.CREATED_ONCE_SUCCESS)
-      .send(
-        createResponseMessage('Food entry registered successfully.', entry),
-      );
+    setTimeout(() => {
+      res
+        .status(HTTPStatuses.CREATED_ONCE_SUCCESS)
+        .send(
+          createResponseMessage('Food entry registered successfully.', entry),
+        );
+    }, 1000);
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)

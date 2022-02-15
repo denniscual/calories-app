@@ -1,13 +1,5 @@
 import { httpService } from "./config.service";
-
-interface FoodEntry {
-  id: string;
-  name: string;
-  numOfCalories: number;
-  price: number;
-  createdAt: string;
-  meal: string;
-}
+import { FoodEntry } from "./foodEntry.service";
 
 export interface GetUserFoodEntriesResponse {
   id: string;

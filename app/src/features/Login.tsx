@@ -58,7 +58,7 @@ function LoginForm() {
       username: "",
       password: "",
     },
-    validationSchema: loginValidationSchema,
+    validationSchema: validationSchema,
     onSubmit: (values) => {
       mutation.mutate(values);
     },
@@ -68,7 +68,6 @@ function LoginForm() {
     <form onSubmit={formik.handleSubmit}>
       <Stack spacing={3}>
         <TextField
-          id="username"
           label="Username"
           error={Boolean(
             formik.getFieldMeta("username").touched && formik.errors.username
@@ -77,7 +76,6 @@ function LoginForm() {
           {...formik.getFieldProps("username")}
         />
         <TextField
-          id="password"
           label="Password"
           type="password"
           error={Boolean(
@@ -108,7 +106,7 @@ function LoginForm() {
   );
 }
 
-const loginValidationSchema = Yup.object().shape({
+const validationSchema = Yup.object().shape({
   username: Yup.string().required("This field is required"),
   password: Yup.string().required("This field is required"),
 });

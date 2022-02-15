@@ -25,7 +25,7 @@ import LunchDiningIcon from "@mui/icons-material/LunchDining";
 import BrunchDiningIcon from "@mui/icons-material/BrunchDining";
 import EditIcon from "@mui/icons-material/Edit";
 import { roundOff2DecimalPlaces } from "utils";
-import RootAddUserFoodEntryDialog from "./AddUserFoodEntryDialog";
+import RootCreateUserFoodEntryDialog from "./CreateUserFoodEntryDialog";
 
 // TODO:
 // - add create
@@ -48,6 +48,13 @@ export default function UserFoodEntries({
       })
   ).data as GetUserFoodEntriesResponse;
 
+  const totalCaloriesForAllMeal = roundOff2DecimalPlaces(
+    data.foodEntries.reduce((acc, value) => acc + value.numOfCalories, 0)
+  );
+  const totalPriceForAllMeal = roundOff2DecimalPlaces(
+    data.foodEntries.reduce((acc, value) => acc + value.price, 0)
+  );
+
   const groupedFoodEntriesByMeal = meals.map((meal) => {
     const foundEntries = data.foodEntries.filter(
       (entry) => entry.meal === meal.label
@@ -55,35 +62,39 @@ export default function UserFoodEntries({
     const totalCalories = roundOff2DecimalPlaces(
       foundEntries.reduce((acc, value) => acc + value.numOfCalories, 0)
     );
+    const totalPrice = roundOff2DecimalPlaces(
+      foundEntries.reduce((acc, value) => acc + value.price, 0)
+    );
     return {
       ...meal,
       totalCalories,
+      totalPrice,
       foodEntries: foundEntries,
     };
   });
 
   return (
     <Stack spacing={4}>
-      {groupedFoodEntriesByMeal.map((grouped) => {
+      {groupedFoodEntriesByMeal.map((meal) => {
         return (
-          <Card elevation={8} key={grouped.label}>
+          <Card elevation={8} key={meal.label}>
             <CardHeader
-              avatar={grouped.icon}
+              avatar={meal.icon}
               title={
                 <Typography
                   variant="subtitle1"
                   fontWeight="medium"
                   component="span"
                 >
-                  {grouped.label}
+                  {meal.label}
                 </Typography>
               }
-              subheader={`${grouped.totalCalories} kcal`}
+              subheader={`${meal.totalCalories} kcal - $${meal.totalPrice}`}
             />
-            {grouped.foodEntries.length > 0 && (
+            {meal.foodEntries.length > 0 && (
               <CardContent>
                 <List>
-                  {grouped.foodEntries.map((entry) => (
+                  {meal.foodEntries.map((entry) => (
                     <Fragment key={entry.id}>
                       <ListItem
                         secondaryAction={
@@ -113,7 +124,7 @@ export default function UserFoodEntries({
               </CardContent>
             )}
             <CardActions disableSpacing>
-              <AddUserFoodEntryDialog />
+              <AddUserFoodEntryDialog meal={meal.label} userId={data.id} />
             </CardActions>
           </Card>
         );
@@ -141,7 +152,7 @@ const meals = [
   },
 ];
 
-function AddUserFoodEntryDialog() {
+function AddUserFoodEntryDialog(props: { userId: string; meal: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -154,7 +165,11 @@ function AddUserFoodEntryDialog() {
       >
         Add food
       </Button>
-      <RootAddUserFoodEntryDialog open={open} onClose={() => setOpen(false)} />
+      <RootCreateUserFoodEntryDialog
+        {...props}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
     </>
   );
 }
