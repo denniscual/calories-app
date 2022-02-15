@@ -1,8 +1,10 @@
 import { StaticDatePicker, StaticDatePickerProps } from "@mui/lab";
-import { Popover, Button, TextField } from "@mui/material";
+import { Popover, Button, TextField, Stack, IconButton } from "@mui/material";
 import moment from "moment";
 import { useState, MouseEventHandler } from "react";
-import { getDateLabel } from "utils";
+import { getDateLabel, DEFAULT_DATE_FORMAT } from "utils";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 export interface DatePickerPopoverProps {
   value: string;
@@ -24,9 +26,37 @@ export function DatePickerPopover({ value, onChange }: DatePickerPopoverProps) {
 
   return (
     <>
-      <Button color="secondary" variant="contained" onClick={handleClick}>
-        {getDateLabel(moment(value))}
-      </Button>
+      <Stack gap={2} direction="row">
+        <IconButton
+          aria-label="Previous date"
+          onClick={() => {
+            onChange(
+              moment(value).subtract(1, "days").format(DEFAULT_DATE_FORMAT)
+            );
+          }}
+        >
+          <ChevronLeftIcon fontSize="small" />
+        </IconButton>
+        <Button
+          style={{
+            textTransform: "capitalize",
+            width: 135,
+          }}
+          color="secondary"
+          variant="contained"
+          onClick={handleClick}
+        >
+          {getDateLabel(moment(value))}
+        </Button>
+        <IconButton
+          aria-label="Next date"
+          onClick={() => {
+            onChange(moment(value).add(1, "days").format(DEFAULT_DATE_FORMAT));
+          }}
+        >
+          <ChevronRightIcon fontSize="small" />
+        </IconButton>
+      </Stack>
       <Popover
         open={open}
         anchorEl={anchorEl}
@@ -45,7 +75,7 @@ export function DatePickerPopover({ value, onChange }: DatePickerPopoverProps) {
           value={value}
           onChange={(date) => {
             // @ts-expect-error incomapatible types
-            onChange(date.format("YYYY-MM-DD"));
+            onChange(date.format(DEFAULT_DATE_FORMAT));
             handleClose();
           }}
           renderInput={(params: any) => <TextField {...params} />}

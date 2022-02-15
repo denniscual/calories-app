@@ -31,7 +31,7 @@ export function getDateLabel(current: Moment) {
   const now = moment();
   const yesterday = now.clone().subtract(1, "days");
   const tomorrow = now.clone().add(1, "days");
-  const formatDate = getDefaultFormatDate("YYYY-MM-DD");
+  const formatDate = getDefaultFormatDate(DEFAULT_DATE_FORMAT);
   const currentDate = formatDate(current);
 
   if (formatDate(now) === currentDate) {
@@ -41,7 +41,7 @@ export function getDateLabel(current: Moment) {
   } else if (formatDate(tomorrow) === currentDate) {
     return "Tomorrow";
   } else {
-    return current.format("LL");
+    return current.format("ll");
   }
 }
 
@@ -50,3 +50,5 @@ function getDefaultFormatDate(formatDate: string) {
     return current.format(formatDate);
   };
 }
+
+export const DEFAULT_DATE_FORMAT = "YYYY-MM-DD";
