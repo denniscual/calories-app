@@ -21,3 +21,7 @@ export function usePrevious<T>(val: T): T | null {
   }
   return prevNow.current;
 }
+
+export function roundOff2DecimalPlaces(num: number) {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+}

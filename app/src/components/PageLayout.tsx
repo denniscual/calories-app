@@ -58,7 +58,7 @@ export function PageLayout({
       <main
         style={{
           gridArea: "main",
-          margin: "40px 24px 0 24px",
+          margin: "40px 24px 40px 24px",
         }}
       >
         {main}

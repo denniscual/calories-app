@@ -1,67 +1,141 @@
-import { useSearchParams } from "react-router-dom";
-import { useQuery } from "react-query";
-import moment from "moment";
+import { Fragment } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+  Divider,
+  Card,
+  CardHeader,
+  CardContent,
+  CardActions,
+  Typography,
+} from "@mui/material";
 import {
   getUserFoodEntries,
   GetUserFoodEntriesResponse,
 } from "api/user.service";
-import { useLoggedUser } from "api";
+import { useQuery } from "react-query";
+import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import LunchDiningIcon from "@mui/icons-material/LunchDining";
+import BrunchDiningIcon from "@mui/icons-material/BrunchDining";
+import EditIcon from "@mui/icons-material/Edit";
+import { roundOff2DecimalPlaces } from "utils";
 
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import { Avatar, Button, IconButton, Typography } from "@mui/material";
-
-export default function UserFoodEntries() {
-  const loggedUser = useLoggedUser();
-  const now = moment().format("YYYY-MM-DD");
-  let [searchParams] = useSearchParams({
-    date: now,
-  });
-
-  const { data } = useQuery<GetUserFoodEntriesResponse, Error>(
-    ["userFoodEntries", searchParams.get("date")],
+export default function UserFoodEntries({
+  userId,
+  date,
+}: {
+  userId: string;
+  date: string;
+}) {
+  const data = useQuery<GetUserFoodEntriesResponse, Error>(
+    ["userFoodEntries", date],
     () =>
       getUserFoodEntries({
-        userId: loggedUser.id,
-        date: searchParams.get("date") as string,
+        userId,
+        date,
       })
-  );
+  ).data as GetUserFoodEntriesResponse;
+
+  const groupedFoodEntriesByMeal = meals.map((meal) => {
+    const foundEntries = data.foodEntries.filter(
+      (entry) => entry.meal === meal.label
+    );
+    const totalCalories = roundOff2DecimalPlaces(
+      foundEntries.reduce((acc, value) => acc + value.numOfCalories, 0)
+    );
+    return {
+      ...meal,
+      totalCalories,
+      foodEntries: foundEntries,
+    };
+  });
 
   return (
-    <div>
-      <Card elevation={8}>
-        <CardHeader
-          avatar={
-            <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-              R
-            </Avatar>
-          }
-          title="Shrimp and Chorizo Paella"
-          subheader="September 14, 2016"
-        />
-        <CardContent>
-          <Typography variant="body2" color="text.secondary">
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
-          </Typography>
-        </CardContent>
-        <CardActions disableSpacing>
-          <Button
-            sx={{
-              width: "100%",
-            }}
-            variant="text"
-          >
-            Add food
-          </Button>
-        </CardActions>
-      </Card>
-    </div>
+    <Stack spacing={4}>
+      {groupedFoodEntriesByMeal.map((grouped) => {
+        return (
+          <Card elevation={8} key={grouped.label}>
+            <CardHeader
+              avatar={grouped.icon}
+              title={
+                <Typography variant="subtitle1" fontWeight="medium">
+                  {grouped.label}
+                </Typography>
+              }
+              subheader={`${grouped.totalCalories} cals`}
+            />
+            {grouped.foodEntries.length > 0 && (
+              <CardContent>
+                <List>
+                  {grouped.foodEntries.map((entry) => (
+                    <Fragment key={entry.id}>
+                      <ListItem
+                        secondaryAction={
+                          <Stack gap={2} direction="row">
+                            <IconButton edge="end" aria-label="Edit">
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton
+                              color="error"
+                              edge="end"
+                              aria-label="Delete"
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Stack>
+                        }
+                      >
+                        <ListItemText
+                          primary={entry.name}
+                          secondary={`${entry.numOfCalories} cals`}
+                        />
+                      </ListItem>
+                      <Divider component="li" />
+                    </Fragment>
+                  ))}
+                </List>
+              </CardContent>
+            )}
+
+            <CardActions disableSpacing>
+              <Button
+                sx={{
+                  width: "100%",
+                }}
+                variant="text"
+              >
+                Add food
+              </Button>
+            </CardActions>
+          </Card>
+        );
+      })}
+    </Stack>
   );
 }
+
+// TODO: Add meal icon.
+const meals = [
+  {
+    label: "Breakfast",
+    icon: <FreeBreakfastIcon color="secondary" fontSize="small" />,
+  },
+  {
+    label: "Lunch",
+    icon: <RestaurantIcon color="secondary" fontSize="small" />,
+  },
+  {
+    label: "Dinner",
+    icon: <BrunchDiningIcon color="secondary" fontSize="small" />,
+  },
+  {
+    label: "Snack",
+    icon: <LunchDiningIcon color="secondary" fontSize="small" />,
+  },
+];

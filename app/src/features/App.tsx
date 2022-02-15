@@ -4,7 +4,7 @@ import Login from "./Login";
 import AdminDashboard from "./AdminDashboard";
 import UserDashboard from "./UserDashboard";
 import { useMemo } from "react";
-import UserFoodEntries from "./UserFoodEntries";
+import UserFoodEntries from "./User";
 import Reports from "./Reports";
 import Users from "./Users";
 

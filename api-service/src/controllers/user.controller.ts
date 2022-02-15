@@ -61,7 +61,7 @@ export const getUser: RequestHandler = async (req, res) => {
   try {
     const { params } = req;
     if (params.userId === undefined) {
-      throw new Error('Request query string "userId" is required.');
+      throw new Error('Request param string "userId" is required.');
     }
 
     const user = await db.user.findByPk(params.userId);

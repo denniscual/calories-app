@@ -7,7 +7,7 @@ import {
   HTTPStatuses,
 } from '../utils';
 import moment from 'moment';
-import _ from 'lodash';
+import { groupBy, toPairs } from 'lodash';
 
 export const getFoodEntries: RequestHandler = async (req, res) => {
   try {
@@ -54,6 +54,7 @@ export const getFoodEntryById: RequestHandler = async (req, res) => {
   }
 };
 
+// TODO: The `createdAt` and `updatedAt` must be supplied by the client/app.
 // For creating food entry, the `req.body.userId` is the owner of the food entry not the user of the app.
 export const createFoodEntry: RequestHandler = async (req, res) => {
   const { body } = req;
@@ -172,11 +173,11 @@ export const getFoodEntriesReport: RequestHandler = async (req, res) => {
       nest: true,
     });
 
-    const groupedByDateEntries = _.groupBy(last7DaysFoodEntries, (entry) => {
+    const groupedByDateEntries = groupBy(last7DaysFoodEntries, (entry) => {
       return moment(entry.createdAt).format('YYYY-MM-DD');
     });
 
-    const datesWithFoodEntriesCount = _.toPairs(groupedByDateEntries).map(
+    const datesWithFoodEntriesCount = toPairs(groupedByDateEntries).map(
       (dateCollection) => {
         const collection = dateCollection[1];
         return {

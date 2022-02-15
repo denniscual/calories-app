@@ -22,7 +22,7 @@ export function DatePickerPopover({ value, onChange }: DatePickerPopoverProps) {
 
   return (
     <>
-      <Button variant="contained" onClick={handleClick}>
+      <Button color="secondary" variant="contained" onClick={handleClick}>
         Today
       </Button>
       <Popover
