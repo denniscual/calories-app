@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Button,
@@ -25,6 +25,7 @@ import LunchDiningIcon from "@mui/icons-material/LunchDining";
 import BrunchDiningIcon from "@mui/icons-material/BrunchDining";
 import EditIcon from "@mui/icons-material/Edit";
 import { roundOff2DecimalPlaces } from "utils";
+import RootAddUserFoodEntryDialog from "./AddUserFoodEntryDialog";
 
 // TODO:
 // - add create
@@ -111,16 +112,8 @@ export default function UserFoodEntries({
                 </List>
               </CardContent>
             )}
-
             <CardActions disableSpacing>
-              <Button
-                sx={{
-                  width: "100%",
-                }}
-                variant="text"
-              >
-                Add food
-              </Button>
+              <AddUserFoodEntryDialog />
             </CardActions>
           </Card>
         );
@@ -129,7 +122,6 @@ export default function UserFoodEntries({
   );
 }
 
-// TODO: Add meal icon.
 const meals = [
   {
     label: "Breakfast",
@@ -148,3 +140,21 @@ const meals = [
     icon: <LunchDiningIcon color="secondary" fontSize="small" />,
   },
 ];
+
+function AddUserFoodEntryDialog() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        onClick={() => setOpen(true)}
+        sx={{
+          width: "100%",
+        }}
+        variant="text"
+      >
+        Add food
+      </Button>
+      <RootAddUserFoodEntryDialog open={open} onClose={() => setOpen(false)} />
+    </>
+  );
+}

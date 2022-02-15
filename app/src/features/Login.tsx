@@ -1,6 +1,6 @@
-import { Stack, Typography, Paper } from "@mui/material";
+import { Stack, Typography, Paper, Button } from "@mui/material";
 import { useFormik } from "formik";
-import { Button, TextField, Snackbar } from "components";
+import { TextField, Snackbar } from "components";
 import * as Yup from "yup";
 import { signin, useLoginUser, SigninInput, SigninDataResponse } from "api";
 import { useMutation } from "react-query";
@@ -86,7 +86,14 @@ function LoginForm() {
           helperText={formik.errors.password}
           {...formik.getFieldProps("password")}
         />
-        <Button type="submit" disabled={mutation.isLoading}>
+        <Button
+          sx={{
+            height: 56,
+          }}
+          variant="contained"
+          type="submit"
+          disabled={mutation.isLoading}
+        >
           Login
         </Button>
         <Snackbar

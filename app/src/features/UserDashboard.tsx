@@ -17,7 +17,7 @@ import { DEFAULT_DATE_FORMAT } from "utils";
 
 export default function UserDashboard() {
   const [, setDate] = useDate();
-  const [isPending, startTransition] = useTransition({ timeoutMs: 5000 });
+  const [, startTransition] = useTransition({ timeoutMs: 5000 });
   const loggedUser = useLoggedUser();
   let [searchParams, setSearchParams] = useSearchParams({
     date: moment().format(DEFAULT_DATE_FORMAT),
