@@ -26,6 +26,11 @@ import BrunchDiningIcon from "@mui/icons-material/BrunchDining";
 import EditIcon from "@mui/icons-material/Edit";
 import { roundOff2DecimalPlaces } from "utils";
 
+// TODO:
+// - add create
+// - add edit
+// - add delete
+// - for querying data, don't go to receeding state of suspense. Check docs for this.
 export default function UserFoodEntries({
   userId,
   date,
@@ -64,11 +69,15 @@ export default function UserFoodEntries({
             <CardHeader
               avatar={grouped.icon}
               title={
-                <Typography variant="subtitle1" fontWeight="medium">
+                <Typography
+                  variant="subtitle1"
+                  fontWeight="medium"
+                  component="span"
+                >
                   {grouped.label}
                 </Typography>
               }
-              subheader={`${grouped.totalCalories} cals`}
+              subheader={`${grouped.totalCalories} kcal`}
             />
             {grouped.foodEntries.length > 0 && (
               <CardContent>
@@ -93,7 +102,7 @@ export default function UserFoodEntries({
                       >
                         <ListItemText
                           primary={entry.name}
-                          secondary={`${entry.numOfCalories} cals`}
+                          secondary={`${entry.numOfCalories} kcal`}
                         />
                       </ListItem>
                       <Divider component="li" />

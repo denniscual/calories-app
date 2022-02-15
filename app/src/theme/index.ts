@@ -1,3 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 
-export default createTheme();
+export default createTheme({
+  shape: {
+    borderRadius: 12,
+  },
+});

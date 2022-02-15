@@ -34,6 +34,7 @@ export function PageLayout({
         {topBar}
       </Paper>
       <Paper
+        square
         style={{
           gridArea: "nav",
           position: "fixed",
