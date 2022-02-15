@@ -32,7 +32,7 @@ export const signup: RequestHandler = (req, res) => {
           user.setRoles(roles).then(() => {
             const token = generateToken(user.id);
             res.status(HTTPStatuses.CREATED_ONCE_SUCCESS).send(
-              createResponseMessage('User registered successfully!', {
+              createResponseMessage('Successfully logged in.', {
                 id: user.id,
                 username: user.username,
                 roles: roles.map((role) => role.name),

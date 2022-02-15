@@ -6,9 +6,10 @@ interface FoodEntry {
   numOfCalories: number;
   price: number;
   createdAt: string;
+  meal: string;
 }
 
-interface GetUserFoodEntriesResponse {
+export interface GetUserFoodEntriesResponse {
   id: string;
   fullName: string;
   maxCalories: number;
@@ -16,13 +17,15 @@ interface GetUserFoodEntriesResponse {
   foodEntries: FoodEntry[];
 }
 
-export async function getUserFoodEntries(
-  userId: string
-): Promise<GetUserFoodEntriesResponse> {
-  try {
-    const res = await httpService.get(`/auth/users/${userId}/entries`);
-    return res.data.data;
-  } catch (err) {
-    throw err;
-  }
+export interface UserFoodEntriesVariables {
+  userId: string;
+  date: string;
+}
+
+export async function getUserFoodEntries({
+  userId,
+  date,
+}: UserFoodEntriesVariables): Promise<GetUserFoodEntriesResponse> {
+  const res = await httpService.get(`/users/${userId}/entries?date=${date}`);
+  return res.data;
 }

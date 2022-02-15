@@ -111,15 +111,15 @@ export const getUserFoodEntries: RequestHandler = async (req, res) => {
       });
     }
 
-    res.status(HTTPStatuses.SUCCESS).send(
-      createResponseMessage('User food entries retrieved successfully.', {
+    setTimeout(() => {
+      res.status(HTTPStatuses.SUCCESS).send({
         id: user.id,
         fullName: user.fullName,
         maxCalories: user.maxCalories,
         maxPricePerMonth: user.maxPricePerMonth,
         foodEntries,
-      }),
-    );
+      });
+    }, 1000);
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)

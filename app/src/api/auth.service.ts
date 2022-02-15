@@ -14,10 +14,6 @@ export interface SigninDataResponse {
 export async function signin(
   formData: SigninInput
 ): Promise<SigninDataResponse> {
-  try {
-    const res = await httpService.post("/auth/signin", formData);
-    return res.data.data;
-  } catch (err) {
-    throw err;
-  }
+  const res = await httpService.post("/auth/signin", formData);
+  return res.data.data;
 }

@@ -6,6 +6,8 @@ import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePickerPopover } from "components";
 import { useLoggedUser } from "api";
+import { Suspense } from "react";
+import { ErrorBoundary } from "components";
 
 export default function UserDashboard() {
   const loggedUser = useLoggedUser();
@@ -29,7 +31,13 @@ export default function UserDashboard() {
         </TopBar>
       }
       nav={<MenuList items={menuList} />}
-      main={<Outlet />}
+      main={
+        <ErrorBoundary>
+          <Suspense fallback={<div>Fetching user food entries...</div>}>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
+      }
     />
   );
 }

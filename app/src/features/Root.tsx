@@ -12,12 +12,12 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import AdapterMoment from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary } from "components";
 
 export default function Root() {
   return (
     <StrictMode>
-      <ErrorBoundary FallbackComponent={RootErrorBoundary}>
+      <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -33,8 +33,4 @@ export default function Root() {
       </ErrorBoundary>
     </StrictMode>
   );
-}
-
-function RootErrorBoundary() {
-  return <div>Sorry something went wrong. Please try again later.</div>;
 }
