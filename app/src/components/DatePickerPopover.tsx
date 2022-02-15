@@ -44,6 +44,7 @@ export function DatePickerPopover({ value, onChange }: DatePickerPopoverProps) {
           onChange={(date) => {
             // @ts-expect-error incomapatible types
             onChange(date.format("YYYY-MM-DD"));
+            handleClose();
           }}
           renderInput={(params: any) => <TextField {...params} />}
         />

@@ -1,3 +1,5 @@
+import { useRef } from "react";
+
 export function generateGreetings() {
   const currentHour = new Date().getHours();
   if (currentHour >= 0 && currentHour < 12) {
@@ -9,4 +11,13 @@ export function generateGreetings() {
   } else {
     return "Hello";
   }
+}
+
+export function usePrevious<T>(val: T): T | null {
+  let prevNow = useRef<T | null>(null);
+  if (prevNow.current === null) {
+    prevNow.current = val;
+    return null;
+  }
+  return prevNow.current;
 }
