@@ -1,3 +1,4 @@
+import moment, { Moment } from "moment";
 import { useRef } from "react";
 
 export function generateGreetings() {
@@ -24,4 +25,28 @@ export function usePrevious<T>(val: T): T | null {
 
 export function roundOff2DecimalPlaces(num: number) {
   return Math.round((num + Number.EPSILON) * 100) / 100;
+}
+
+export function getDateLabel(current: Moment) {
+  const now = moment();
+  const yesterday = now.clone().subtract(1, "days");
+  const tomorrow = now.clone().add(1, "days");
+  const formatDate = getDefaultFormatDate("YYYY-MM-DD");
+  const currentDate = formatDate(current);
+
+  if (formatDate(now) === currentDate) {
+    return "Today";
+  } else if (formatDate(yesterday) === currentDate) {
+    return "Yesterday";
+  } else if (formatDate(tomorrow) === currentDate) {
+    return "Tomorrow";
+  } else {
+    return current.format("LL");
+  }
+}
+
+function getDefaultFormatDate(formatDate: string) {
+  return function format(current: Moment) {
+    return current.format(formatDate);
+  };
 }

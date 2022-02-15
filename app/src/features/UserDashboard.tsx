@@ -11,9 +11,8 @@ import { ErrorBoundary } from "components";
 
 export default function UserDashboard() {
   const loggedUser = useLoggedUser();
-  const now = moment().format("YYYY-MM-DD");
   let [searchParams, setSearchParams] = useSearchParams({
-    date: now,
+    date: moment().format("YYYY-MM-DD"),
   });
 
   return (

@@ -1,6 +1,8 @@
 import { StaticDatePicker, StaticDatePickerProps } from "@mui/lab";
 import { Popover, Button, TextField } from "@mui/material";
+import moment from "moment";
 import { useState, MouseEventHandler } from "react";
+import { getDateLabel } from "utils";
 
 export interface DatePickerPopoverProps {
   value: string;
@@ -23,7 +25,7 @@ export function DatePickerPopover({ value, onChange }: DatePickerPopoverProps) {
   return (
     <>
       <Button color="secondary" variant="contained" onClick={handleClick}>
-        Today
+        {getDateLabel(moment(value))}
       </Button>
       <Popover
         open={open}
