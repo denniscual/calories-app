@@ -84,11 +84,12 @@ export const getUser: RequestHandler = async (req, res) => {
 };
 
 export const getUserFoodEntries: RequestHandler = async (req, res) => {
-  const { params } = req;
+  const { params, query } = req;
   try {
     if (params.userId === undefined) {
       throw new Error('Request query string "userId" is required.');
     }
+
     const user = await db.user.findByPk(params.userId, {
       include: db.foodEntry,
       where: {
@@ -102,8 +103,13 @@ export const getUserFoodEntries: RequestHandler = async (req, res) => {
       return;
     }
 
-    // TODO:
-    // - here we need to filter the foodEntries based on the the provided date.
+    let foodEntries = user.foodEntries;
+
+    if (query.date) {
+      foodEntries = foodEntries.filter((entry) => {
+        return moment(entry.createdAt).format('YYYY-MM-DD') === query.date;
+      });
+    }
 
     res.status(HTTPStatuses.SUCCESS).send(
       createResponseMessage('User food entries retrieved successfully.', {
@@ -111,7 +117,7 @@ export const getUserFoodEntries: RequestHandler = async (req, res) => {
         fullName: user.fullName,
         maxCalories: user.maxCalories,
         maxPricePerMonth: user.maxPricePerMonth,
-        foodEntries: user.foodEntries,
+        foodEntries,
       }),
     );
   } catch (err) {

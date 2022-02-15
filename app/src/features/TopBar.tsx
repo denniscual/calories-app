@@ -18,21 +18,32 @@ export default function TopBar({
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "space-between",
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
         alignItems: "center",
       }}
     >
       <Typhography
         variant="h1"
         sx={{
-          fontSize: "h5.fontSize",
+          fontSize: "h6.fontSize",
+          fontWeight: "medium",
         }}
       >
         {welcomeMessage}
       </Typhography>
-      <div>{children}</div>
-      <div>
+      <div
+        style={{
+          justifySelf: "center",
+        }}
+      >
+        {children}
+      </div>
+      <div
+        style={{
+          justifySelf: "end",
+        }}
+      >
         <Button variant="text" color="primary" onClick={logoutUser}>
           Logout
         </Button>
