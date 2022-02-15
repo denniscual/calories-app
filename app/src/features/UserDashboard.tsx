@@ -6,13 +6,21 @@ import { useSearchParams } from "react-router-dom";
 import moment from "moment";
 import { DatePickerPopover } from "components";
 import { useLoggedUser } from "api";
-import { Suspense } from "react";
+import {
+  Suspense,
+  // @ts-expect-error `useTransition` is not yet included on "@types/react".
+  useTransition,
+} from "react";
 import { ErrorBoundary } from "components";
+import { useDate } from "./DateContext";
+import { DEFAULT_DATE_FORMAT } from "utils";
 
 export default function UserDashboard() {
+  const [, setDate] = useDate();
+  const [isPending, startTransition] = useTransition({ timeoutMs: 5000 });
   const loggedUser = useLoggedUser();
   let [searchParams, setSearchParams] = useSearchParams({
-    date: moment().format("YYYY-MM-DD"),
+    date: moment().format(DEFAULT_DATE_FORMAT),
   });
 
   return (
@@ -21,9 +29,10 @@ export default function UserDashboard() {
         <TopBar fullName={loggedUser.fullName}>
           <DatePickerPopover
             value={searchParams.get("date") as string}
-            onChange={(date) => {
+            onChange={(chosenDate) => {
+              startTransition(() => setDate(chosenDate));
               setSearchParams({
-                date: date as string,
+                date: chosenDate,
               });
             }}
           />
@@ -31,11 +40,13 @@ export default function UserDashboard() {
       }
       nav={<MenuList items={menuList} />}
       main={
-        <ErrorBoundary>
-          <Suspense fallback={<div>Fetching user food entries...</div>}>
-            <Outlet />
-          </Suspense>
-        </ErrorBoundary>
+        <>
+          <ErrorBoundary>
+            <Suspense fallback={<div>Fetching user food entries...</div>}>
+              <Outlet />
+            </Suspense>
+          </ErrorBoundary>
+        </>
       }
     />
   );

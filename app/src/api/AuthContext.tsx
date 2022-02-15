@@ -93,7 +93,7 @@ export function useLogoutUser() {
   };
 }
 
-export function useAuth() {
+function useAuth() {
   return useContext(AuthContext);
 }
 

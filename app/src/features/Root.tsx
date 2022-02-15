@@ -13,6 +13,7 @@ import "@fontsource/roboto/700.css";
 import AdapterMoment from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { ErrorBoundary } from "components";
+import { DateContextProvider } from "./DateContext";
 
 export default function Root() {
   return (
@@ -23,9 +24,11 @@ export default function Root() {
             <CssBaseline />
             <LocalizationProvider dateAdapter={AdapterMoment}>
               <BrowserRouter>
-                <AuthContextProvider>
-                  <App />
-                </AuthContextProvider>
+                <DateContextProvider>
+                  <AuthContextProvider>
+                    <App />
+                  </AuthContextProvider>
+                </DateContextProvider>
               </BrowserRouter>
             </LocalizationProvider>
           </ThemeProvider>

@@ -1,4 +1,4 @@
-import { StaticDatePicker, StaticDatePickerProps } from "@mui/lab";
+import { StaticDatePicker } from "@mui/lab";
 import { Popover, Button, TextField, Stack, IconButton } from "@mui/material";
 import moment from "moment";
 import { useState, MouseEventHandler } from "react";
@@ -8,7 +8,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 export interface DatePickerPopoverProps {
   value: string;
-  onChange: StaticDatePickerProps["onChange"];
+  onChange: (date: string) => void;
 }
 
 export function DatePickerPopover({ value, onChange }: DatePickerPopoverProps) {

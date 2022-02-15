@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { useAuth, isAdmin, hasUser } from "api";
+import { isAdmin, hasUser, useLoggedUser } from "api";
 import Login from "./Login";
 import AdminDashboard from "./AdminDashboard";
 import UserDashboard from "./UserDashboard";
@@ -9,12 +9,12 @@ import Reports from "./Reports";
 import Users from "./Users";
 
 export default function App() {
-  const [auth] = useAuth();
+  const loggedUser = useLoggedUser();
   const routeEl = useMemo(() => {
-    if (!hasUser(auth)) {
+    if (!hasUser(loggedUser)) {
       return <Route path="/" element={<Login />}></Route>;
     } else {
-      if (isAdmin(auth)) {
+      if (isAdmin(loggedUser)) {
         return (
           <Route path="/admin" element={<AdminDashboard />}>
             <Route index element={<Users />} />
@@ -28,7 +28,7 @@ export default function App() {
         </Route>
       );
     }
-  }, [auth]);
+  }, [loggedUser]);
 
   return (
     <div>

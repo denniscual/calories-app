@@ -1,16 +1,12 @@
-import { useSearchParams } from "react-router-dom";
-import moment from "moment";
 import { useLoggedUser } from "api";
 import UserFoodEntries from "./UserFoodEntries";
 import { Paper } from "@mui/material";
 import MyDailyCalories from "./MyDailyCalories";
+import { useDate } from "./DateContext";
 
 export default function User() {
   const loggedUser = useLoggedUser();
-  const now = moment().format("YYYY-MM-DD");
-  let [searchParams] = useSearchParams({
-    date: now,
-  });
+  const [date] = useDate();
 
   return (
     <div
@@ -24,10 +20,7 @@ export default function User() {
           flex: 1,
         }}
       >
-        <UserFoodEntries
-          userId={loggedUser.id}
-          date={searchParams.get("date") as string}
-        />
+        <UserFoodEntries userId={loggedUser.id} date={date} />
       </div>
       <Paper
         elevation={8}
@@ -38,10 +31,7 @@ export default function User() {
           p: 2,
         }}
       >
-        <MyDailyCalories
-          userId={loggedUser.id}
-          date={searchParams.get("date") as string}
-        />
+        <MyDailyCalories userId={loggedUser.id} date={date} />
       </Paper>
     </div>
   );
