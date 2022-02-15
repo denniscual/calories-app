@@ -3,10 +3,7 @@ import moment from "moment";
 import { useLoggedUser } from "api";
 import UserFoodEntries from "./UserFoodEntries";
 import { Paper } from "@mui/material";
-
-import { Line, Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Typography } from "@mui/material";
+import MyDailyCalories from "./MyDailyCalories";
 
 export default function User() {
   const loggedUser = useLoggedUser();
@@ -41,31 +38,11 @@ export default function User() {
           p: 2,
         }}
       >
-        <MyDailyCalories />
+        <MyDailyCalories
+          userId={loggedUser.id}
+          date={searchParams.get("date") as string}
+        />
       </Paper>
-    </div>
-  );
-}
-
-ChartJS.register(ArcElement, Tooltip, Legend);
-
-const data = {
-  labels: ["Consumed (500 kcal)", "Remaining (1500 kcal)"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [500, 1500],
-      backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(54, 162, 235, 0.2)"],
-      borderWidth: 1,
-    },
-  ],
-};
-
-function MyDailyCalories() {
-  return (
-    <div>
-      <Typography variant="h6">My energy summary</Typography>
-      <Pie data={data} />
     </div>
   );
 }
