@@ -3,13 +3,15 @@ import Button from "@mui/material/Button";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
-import moment from "moment";
 import { FoodEntry } from "api/foodEntry.service";
 import { Stack } from "@mui/material";
 
-export default function UserFoodEntryForm({
-  userId,
-  meal,
+export type FoodEntryFormValues = Pick<
+  FoodEntry,
+  "name" | "numOfCalories" | "price"
+>;
+
+export default function FoodEntryForm({
   totalCaloriesForAllMeal,
   totalPriceForMonth = 0,
   maxCalories,
@@ -18,19 +20,17 @@ export default function UserFoodEntryForm({
   onCancel,
   isFormLoading = false,
   initialValues,
-  date,
+  primaryActionButtonTitle = "",
 }: {
-  userId: string;
-  meal: string;
   totalCaloriesForAllMeal: number;
   totalPriceForMonth?: number;
   maxCalories: number;
   maxPricePerMonth: number;
-  onSubmit: (foodEntry: Omit<FoodEntry, "id">) => void;
+  onSubmit: (foodEntry: FoodEntryFormValues) => void;
   onCancel?: () => void;
   isFormLoading?: boolean;
-  initialValues: Pick<FoodEntry, "name" | "numOfCalories" | "price">;
-  date: string;
+  initialValues: FoodEntryFormValues;
+  primaryActionButtonTitle?: string;
 }) {
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -52,16 +52,8 @@ export default function UserFoodEntryForm({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const chosenDate = moment(date).utc().format();
-      const input = {
-        ...values,
-        createdAt: chosenDate,
-        updatedAt: chosenDate,
-        userId,
-        meal,
-      };
       try {
-        await onSubmit(input);
+        await onSubmit(values);
       } catch (err) {
         setOpenSnackbar(true);
         throw err;
@@ -108,7 +100,7 @@ export default function UserFoodEntryForm({
               Cancel
             </Button>
             <Button disabled={isFormLoading} type="submit">
-              Add
+              {primaryActionButtonTitle}
             </Button>
           </Stack>
         </Stack>

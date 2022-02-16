@@ -28,6 +28,6 @@ export type UpdateFoodEntryInput = Omit<
 export async function updateFoodEntry(
   input: UpdateFoodEntryInput
 ): Promise<UpdateFoodEntryResponse> {
-  const res = await httpService.put(`/api/entries/${input.id}`, input);
+  const res = await httpService.put(`/entries/${input.id}`, input);
   return res.data;
 }

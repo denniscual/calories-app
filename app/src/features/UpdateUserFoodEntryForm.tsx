@@ -1,18 +1,14 @@
 import {
-  createFoodEntry,
-  CreateFoodEntryInput,
-  CreateFoodEntryResponse,
+  updateFoodEntry,
+  UpdateFoodEntryInput,
+  UpdateFoodEntryResponse,
 } from "api/foodEntry.service";
 import { useMutation } from "react-query";
-import { DEFAULT_DATE_FORMAT } from "utils";
-import moment from "moment";
-import { useSearchParams } from "react-router-dom";
 import { queryClient } from "api";
-import UseFoodEntryForm, { FoodEntryFormValues } from "./FoodEntryForm";
+import FoodEntryForm, { FoodEntryFormValues } from "./FoodEntryForm";
 
-export default function CreateUserFoodEntryForm({
-  userId,
-  meal,
+export default function UpdateUserFoodEntryForm({
+  foodEntry,
   onSuccess,
   onError,
   onCancel,
@@ -20,8 +16,7 @@ export default function CreateUserFoodEntryForm({
   maxCalories,
   maxPricePerMonth,
 }: {
-  userId: string;
-  meal: string;
+  foodEntry: UpdateFoodEntryInput;
   onSuccess?: () => void;
   onError?: () => void;
   onCancel?: () => void;
@@ -29,28 +24,19 @@ export default function CreateUserFoodEntryForm({
   maxCalories: number;
   maxPricePerMonth: number;
 }) {
-  const [searchParams] = useSearchParams({
-    date: moment().format(DEFAULT_DATE_FORMAT),
-  });
-  const date = searchParams.get("date") as string;
-
   const mutation = useMutation<
-    CreateFoodEntryResponse,
+    UpdateFoodEntryResponse,
     Error,
-    CreateFoodEntryInput
-  >(createFoodEntry);
+    UpdateFoodEntryInput
+  >(updateFoodEntry);
 
   async function handleSubmit(values: FoodEntryFormValues) {
     try {
-      const chosenDate = moment(date).utc().format();
       const input = {
         ...values,
-        createdAt: chosenDate,
-        updatedAt: chosenDate,
-        meal,
-        userId,
+        id: foodEntry.id,
+        meal: foodEntry.meal,
       };
-
       await mutation.mutateAsync(input);
       queryClient.invalidateQueries("userFoodEntries");
       onSuccess?.();
@@ -61,14 +47,13 @@ export default function CreateUserFoodEntryForm({
   }
 
   const initialValues = {
-    name: "",
-    numOfCalories: 0,
-    price: 0,
+    name: foodEntry.name,
+    numOfCalories: foodEntry.numOfCalories,
+    price: foodEntry.price,
   };
 
   return (
-    <UseFoodEntryForm
-      primaryActionButtonTitle="Add"
+    <FoodEntryForm
       totalCaloriesForAllMeal={totalCaloriesForAllMeal}
       maxCalories={maxCalories}
       maxPricePerMonth={maxPricePerMonth}
@@ -76,6 +61,7 @@ export default function CreateUserFoodEntryForm({
       onCancel={onCancel}
       isFormLoading={mutation.isLoading}
       initialValues={initialValues}
+      primaryActionButtonTitle="Edit"
     />
   );
 }

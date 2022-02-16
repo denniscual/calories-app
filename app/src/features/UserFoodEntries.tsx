@@ -26,6 +26,8 @@ import BrunchDiningIcon from "@mui/icons-material/BrunchDining";
 import EditIcon from "@mui/icons-material/Edit";
 import { roundOff2DecimalPlaces } from "utils";
 import RootCreateUserFoodEntryDialog from "./CreateUserFoodEntryDialog";
+import RootUpdateUserFoodEntryDialog from "./UpdateUserFoodEntryDialog";
+import { UpdateFoodEntryInput } from "api/foodEntry.service";
 
 export default function UserFoodEntries({
   userId,
@@ -91,9 +93,19 @@ export default function UserFoodEntries({
                       <ListItem
                         secondaryAction={
                           <Stack gap={2} direction="row">
-                            <IconButton edge="end" aria-label="Edit">
-                              <EditIcon />
-                            </IconButton>
+                            <UpdateUserFoodEntryDialog
+                              totalCaloriesForAllMeal={totalCaloriesForAllMeal}
+                              maxCalories={data.maxCalories}
+                              maxPricePerMonth={data.maxPricePerMonth}
+                              foodEntry={{
+                                id: entry.id,
+                                meal: meal.label,
+                                numOfCalories: entry.numOfCalories,
+                                price: entry.price,
+                                name: entry.name,
+                              }}
+                            />
+
                             <IconButton
                               color="error"
                               edge="end"
@@ -170,6 +182,27 @@ function AddUserFoodEntryDialog(props: {
         Add food
       </Button>
       <RootCreateUserFoodEntryDialog
+        {...props}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}
+
+function UpdateUserFoodEntryDialog(props: {
+  totalCaloriesForAllMeal: number;
+  maxCalories: number;
+  maxPricePerMonth: number;
+  foodEntry: UpdateFoodEntryInput;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <IconButton edge="end" aria-label="Edit" onClick={() => setOpen(true)}>
+        <EditIcon />
+      </IconButton>
+      <RootUpdateUserFoodEntryDialog
         {...props}
         open={open}
         onClose={() => setOpen(false)}
