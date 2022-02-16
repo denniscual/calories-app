@@ -27,11 +27,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import { roundOff2DecimalPlaces } from "utils";
 import RootCreateUserFoodEntryDialog from "./CreateUserFoodEntryDialog";
 
-// TODO:
-// - add create
-// - add edit
-// - add delete
-// - for querying data, don't go to receeding state of suspense. Check docs for this.
 export default function UserFoodEntries({
   userId,
   date,
@@ -47,13 +42,6 @@ export default function UserFoodEntries({
         date,
       })
   ).data as GetUserFoodEntriesResponse;
-
-  const totalCaloriesForAllMeal = roundOff2DecimalPlaces(
-    data.foodEntries.reduce((acc, value) => acc + value.numOfCalories, 0)
-  );
-  const totalPriceForAllMeal = roundOff2DecimalPlaces(
-    data.foodEntries.reduce((acc, value) => acc + value.price, 0)
-  );
 
   const groupedFoodEntriesByMeal = meals.map((meal) => {
     const foundEntries = data.foodEntries.filter(
