@@ -10,9 +10,8 @@ import moment from 'moment';
 import { groupBy, toPairs } from 'lodash';
 
 // TODO:
-// - this should return in descending order. all of the fetch food entries.
-// - compute the total monthly expense for the food entries.
-// - compute the consumed calories per day.
+// - add the delete functionality.
+// - add the reports.
 
 export const getFoodEntries: RequestHandler = async (req, res) => {
   try {
