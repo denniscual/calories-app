@@ -1,6 +1,5 @@
 import {
   useContext,
-  useEffect,
   createContext,
   Dispatch,
   SetStateAction,
@@ -22,35 +21,19 @@ type AuthContextType = [
   Dispatch<SetStateAction<LoggedUserType>>
 ];
 
+const loggedUser = localStorage.getItem("user");
 const initLoggedUser: LoggedUserType = {
   id: "",
   roles: [],
   fullName: "",
 };
-export const AuthContext = createContext<AuthContextType>([
-  initLoggedUser,
-  () => {},
-]);
+const initAuth: LoggedUserType = loggedUser
+  ? JSON.parse(loggedUser)
+  : initLoggedUser;
+export const AuthContext = createContext<AuthContextType>([initAuth, () => {}]);
 
 export const AuthContextProvider: FC = ({ children }) => {
   const [auth, setAuth] = useState(initLoggedUser);
-
-  useEffect(() => {
-    try {
-      const loggedUser = localStorage.getItem("user");
-      if (loggedUser !== null) {
-        const parsed = JSON.parse(loggedUser);
-        setAuth({
-          id: parsed.id,
-          roles: parsed.roles,
-          fullName: parsed.fullName,
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, []);
-
   const value = useMemo(() => [auth, setAuth] as AuthContextType, [auth]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
