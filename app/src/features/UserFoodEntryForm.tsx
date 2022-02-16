@@ -77,10 +77,8 @@ export default function UserFoodEntryForm({
             margin="dense"
             label="Name"
             fullWidth
-            error={Boolean(
-              formik.getFieldMeta("name").touched && formik.errors.name
-            )}
-            helperText={formik.errors.name}
+            error={Boolean(formik.touched.name && formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
             {...formik.getFieldProps("name")}
           />
           <TextField
@@ -89,10 +87,11 @@ export default function UserFoodEntryForm({
             type="number"
             fullWidth
             error={Boolean(
-              formik.getFieldMeta("numOfCalories").touched &&
-                formik.errors.numOfCalories
+              formik.touched.numOfCalories && formik.errors.numOfCalories
             )}
-            helperText={formik.errors.numOfCalories}
+            helperText={
+              formik.touched.numOfCalories && formik.errors.numOfCalories
+            }
             {...formik.getFieldProps("numOfCalories")}
           />
           <TextField
@@ -100,10 +99,8 @@ export default function UserFoodEntryForm({
             label="Price"
             type="number"
             fullWidth
-            error={Boolean(
-              formik.getFieldMeta("price").touched && formik.errors.price
-            )}
-            helperText={formik.errors.price}
+            error={Boolean(formik.touched.price && formik.errors.price)}
+            helperText={formik.touched.price && formik.errors.price}
             {...formik.getFieldProps("price")}
           />
           <Stack direction="row" gap={1} justifyContent="flex-end">

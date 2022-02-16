@@ -4,15 +4,11 @@ import {
   CreateFoodEntryResponse,
   FoodEntry,
 } from "api/foodEntry.service";
-import { useMutation, useQuery } from "react-query";
-import { DEFAULT_DATE_FORMAT, roundOff2DecimalPlaces } from "utils";
+import { useMutation } from "react-query";
+import { DEFAULT_DATE_FORMAT } from "utils";
 import moment from "moment";
 import { useSearchParams } from "react-router-dom";
 import { queryClient } from "api";
-import {
-  getUserFoodEntries,
-  GetUserFoodEntriesResponse,
-} from "api/user.service";
 import UserFoodEntryForm from "./UserFoodEntryForm";
 
 export default function CreateUserFoodEntryForm({
@@ -21,29 +17,23 @@ export default function CreateUserFoodEntryForm({
   onSuccess,
   onError,
   onCancel,
+  totalCaloriesForAllMeal,
+  maxCalories,
+  maxPricePerMonth,
 }: {
   userId: string;
   meal: string;
   onSuccess?: () => void;
   onError?: () => void;
   onCancel?: () => void;
+  totalCaloriesForAllMeal: number;
+  maxCalories: number;
+  maxPricePerMonth: number;
 }) {
   const [searchParams] = useSearchParams({
     date: moment().format(DEFAULT_DATE_FORMAT),
   });
   const date = searchParams.get("date") as string;
-  const user = useQuery<GetUserFoodEntriesResponse, Error>(
-    ["userFoodEntries"],
-    () =>
-      getUserFoodEntries({
-        userId,
-        date,
-      })
-  ).data as GetUserFoodEntriesResponse;
-
-  const totalCaloriesForAllMeal = roundOff2DecimalPlaces(
-    user.foodEntries.reduce((acc, value) => acc + value.numOfCalories, 0)
-  );
 
   const mutation = useMutation<
     CreateFoodEntryResponse,
@@ -73,8 +63,8 @@ export default function CreateUserFoodEntryForm({
       userId={userId}
       meal={meal}
       totalCaloriesForAllMeal={totalCaloriesForAllMeal}
-      maxCalories={user.maxCalories}
-      maxPricePerMonth={user.maxPricePerMonth}
+      maxCalories={maxCalories}
+      maxPricePerMonth={maxPricePerMonth}
       onSubmit={handleSubmit}
       onCancel={onCancel}
       isFormLoading={mutation.isLoading}

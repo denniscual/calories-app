@@ -69,19 +69,15 @@ function LoginForm() {
       <Stack spacing={3}>
         <TextField
           label="Username"
-          error={Boolean(
-            formik.getFieldMeta("username").touched && formik.errors.username
-          )}
-          helperText={formik.errors.username}
+          error={Boolean(formik.touched.username && formik.errors.username)}
+          helperText={formik.touched.username && formik.errors.username}
           {...formik.getFieldProps("username")}
         />
         <TextField
           label="Password"
           type="password"
-          error={Boolean(
-            formik.getFieldMeta("password").touched && formik.errors.password
-          )}
-          helperText={formik.errors.password}
+          error={Boolean(formik.touched.password && formik.errors.password)}
+          helperText={formik.touched.password && formik.errors.password}
           {...formik.getFieldProps("password")}
         />
         <Button

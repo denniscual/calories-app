@@ -21,19 +21,21 @@ type AuthContextType = [
   Dispatch<SetStateAction<LoggedUserType>>
 ];
 
-const loggedUser = localStorage.getItem("user");
 const initLoggedUser: LoggedUserType = {
   id: "",
   roles: [],
   fullName: "",
 };
-const initAuth: LoggedUserType = loggedUser
-  ? JSON.parse(loggedUser)
-  : initLoggedUser;
-export const AuthContext = createContext<AuthContextType>([initAuth, () => {}]);
+export const AuthContext = createContext<AuthContextType>([
+  initLoggedUser,
+  () => {},
+]);
 
 export const AuthContextProvider: FC = ({ children }) => {
-  const [auth, setAuth] = useState(initLoggedUser);
+  const [auth, setAuth] = useState(() => {
+    const loggedUser = localStorage.getItem("user");
+    return loggedUser ? JSON.parse(loggedUser) : initLoggedUser;
+  });
   const value = useMemo(() => [auth, setAuth] as AuthContextType, [auth]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -61,6 +61,10 @@ export default function UserFoodEntries({
     };
   });
 
+  const totalCaloriesForAllMeal = roundOff2DecimalPlaces(
+    data.foodEntries.reduce((acc, value) => acc + value.numOfCalories, 0)
+  );
+
   return (
     <Stack spacing={4}>
       {groupedFoodEntriesByMeal.map((meal) => {
@@ -112,7 +116,13 @@ export default function UserFoodEntries({
               </CardContent>
             )}
             <CardActions disableSpacing>
-              <AddUserFoodEntryDialog meal={meal.label} userId={data.id} />
+              <AddUserFoodEntryDialog
+                totalCaloriesForAllMeal={totalCaloriesForAllMeal}
+                meal={meal.label}
+                userId={data.id}
+                maxCalories={data.maxCalories}
+                maxPricePerMonth={data.maxPricePerMonth}
+              />
             </CardActions>
           </Card>
         );
@@ -140,7 +150,13 @@ const meals = [
   },
 ];
 
-function AddUserFoodEntryDialog(props: { userId: string; meal: string }) {
+function AddUserFoodEntryDialog(props: {
+  userId: string;
+  meal: string;
+  totalCaloriesForAllMeal: number;
+  maxCalories: number;
+  maxPricePerMonth: number;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <>
