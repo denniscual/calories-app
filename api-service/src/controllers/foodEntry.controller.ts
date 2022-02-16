@@ -125,14 +125,16 @@ export const updateFoodEntry: RequestHandler = async (req, res) => {
       return;
     }
 
-    res
-      .status(HTTPStatuses.SUCCESS)
-      .send(
-        createResponseMessage(
-          'Food entry updated successfully.',
-          updatedFoodEntry,
-        ),
-      );
+    setTimeout(() => {
+      res
+        .status(HTTPStatuses.SUCCESS)
+        .send(
+          createResponseMessage(
+            'Food entry updated successfully.',
+            updatedFoodEntry,
+          ),
+        );
+    }, 1000);
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)
