@@ -1,4 +1,4 @@
-import { Paper, Stack, Typography } from "@mui/material";
+import { Button, Paper, Stack, Typography } from "@mui/material";
 import { getFoodEntriesReport, GetFoodEntriesReportResponse } from "api";
 import moment from "moment";
 import { useQuery } from "react-query";
@@ -13,13 +13,24 @@ import {
   Legend,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import {
+  useState,
+  // @ts-expect-error `useTransition` is not yet included on "@types/react".
+  useTransition,
+} from "react";
 
 export default function Reports() {
-  const nowDate = moment();
-  const date = nowDate.format(DEFAULT_DATE_FORMAT);
+  const [, startTransition] = useTransition({ timeoutMs: 5000 });
+  const [nowDate, setDate] = useState(moment());
+  const [deferredNowDate, setDeferredDate] = useState(nowDate);
+
+  const defferedNowDateString = deferredNowDate.format(DEFAULT_DATE_FORMAT);
   const data = useQuery<GetFoodEntriesReportResponse, Error>(
-    ["foodEntriesReport"],
-    () => getFoodEntriesReport({ date })
+    ["foodEntriesReport", defferedNowDateString],
+    () =>
+      getFoodEntriesReport({
+        date: defferedNowDateString,
+      })
   ).data as GetFoodEntriesReportResponse;
 
   const chartLabels: string[] = [];
@@ -39,6 +50,24 @@ export default function Reports() {
     ],
   };
 
+  function createWeekPickerHandler(direction: "prev" | "next") {
+    return function handler() {
+      let newDate = deferredNowDate.clone();
+      if (direction === "prev") {
+        newDate = newDate.subtract(7, "days");
+      } else {
+        newDate = newDate.add(7, "days");
+      }
+      startTransition(() => {
+        setDeferredDate(newDate);
+      });
+      setDate(newDate);
+    };
+  }
+
+  const prevDate = nowDate.clone().subtract(6, "days").format("ll");
+  const nextDate = nowDate.clone().format("ll");
+
   return (
     <Stack gap={4}>
       <Typography
@@ -47,7 +76,7 @@ export default function Reports() {
         }}
         variant="h1"
       >
-        Food entries in last 7 days
+        Food entries in last 7 days ({prevDate} - {nextDate})
       </Typography>
       <Paper
         elevation={8}
@@ -55,7 +84,25 @@ export default function Reports() {
           p: 2,
           width: "100%",
         }}
+        component={Stack}
+        gap={3}
       >
+        <Stack direction="row" justifyContent="space-between">
+          <Button variant="outlined" onClick={createWeekPickerHandler("prev")}>
+            Previous week
+          </Button>
+          <Typography
+            sx={{
+              fontSize: "h5.fontSize",
+            }}
+            variant="h1"
+          >
+            Total of {data.totalNumOfFoodEntries} food entries
+          </Typography>
+          <Button variant="outlined" onClick={createWeekPickerHandler("next")}>
+            Next week
+          </Button>
+        </Stack>
         <Bar options={options} data={chartData} />
       </Paper>
     </Stack>
