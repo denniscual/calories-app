@@ -11,7 +11,6 @@ import { getFoodEntries, GetFoodEntriesResponse } from "api";
 import { Fragment } from "react";
 import { useQuery } from "react-query";
 import moment from "moment";
-import TimeAgo from "react-timeago";
 import { Link } from "react-router-dom";
 import UpdateUserFoodEntryDialog from "./UpdateUserFoodEntryDialog";
 import DeleteUserFoodEntryDialog from "./DeleteUserFoodEntryDialog";
