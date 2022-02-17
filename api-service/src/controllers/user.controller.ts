@@ -41,15 +41,19 @@ export const getUsers: RequestHandler = async (req, res) => {
         return acc.concat({
           ...value,
           foodEntriesCount: foodEntries.length,
+          totalCalories: foodEntries.reduce(
+            (acc, value) => acc + value.numOfCalories,
+            0,
+          ),
         });
       }, []);
 
-    res.status(HTTPStatuses.SUCCESS).send(
-      createResponseMessage('Users retrieved sucessfully.', {
+    setTimeout(() => {
+      res.status(HTTPStatuses.SUCCESS).send({
         count: users.length,
         users,
-      }),
-    );
+      });
+    }, 1000);
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)

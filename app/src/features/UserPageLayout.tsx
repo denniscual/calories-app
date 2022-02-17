@@ -18,7 +18,7 @@ import {
 import { useDate } from "./DateContext";
 import { DEFAULT_DATE_FORMAT } from "utils";
 
-export default function UserDashboard() {
+export default function UserPageLayout() {
   const [, setDate] = useDate();
   const [, startTransition] = useTransition({ timeoutMs: 5000 });
   const loggedUser = useLoggedUser();
@@ -45,7 +45,7 @@ export default function UserDashboard() {
       main={
         <>
           <ErrorBoundary>
-            <Suspense fallback={<div>Loading your dashboard...</div>}>
+            <Suspense fallback={<div>Fetching data...</div>}>
               <Outlet />
             </Suspense>
           </ErrorBoundary>
