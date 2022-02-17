@@ -16,14 +16,14 @@ export default function App() {
     } else {
       if (isAdmin(loggedUser)) {
         return (
-          <Route path="/admin" element={<AdminDashboard />}>
+          <Route path="/" element={<AdminDashboard />}>
             <Route index element={<FoodEntries />} />
             <Route path="reports" element={<Reports />} />
           </Route>
         );
       }
       return (
-        <Route path="/" element={<UserDashboard />}>
+        <Route path="/user" element={<UserDashboard />}>
           <Route index element={<UserFoodEntries />} />
         </Route>
       );

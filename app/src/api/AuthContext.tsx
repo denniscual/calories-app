@@ -56,7 +56,7 @@ export function useLoginUser() {
       );
       setAuth(loggedUser);
 
-      const to = isAdmin(loggedUser) ? "/admin" : "/";
+      const to = isAdmin(loggedUser) ? "/" : "/user";
       navigate(to, {
         replace: true,
       });
