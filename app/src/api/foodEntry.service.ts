@@ -1,15 +1,5 @@
 import { httpService } from "./config.service";
-
-export interface FoodEntry {
-  id: string;
-  name: string;
-  numOfCalories: number;
-  price: number;
-  meal: string;
-  userId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import { FoodEntry, FoodEntries } from "./types";
 
 export interface CreateFoodEntryResponse extends FoodEntry {}
 export type CreateFoodEntryInput = Omit<FoodEntry, "id">;
@@ -42,5 +32,14 @@ export async function deleteFoodEntry(
   input: DeleteFoodEntryInput
 ): Promise<DeleteFoodEntryResponse> {
   const res = await httpService.delete(`/entries/${input.id}`);
+  return res.data;
+}
+
+export interface GetFoodEntriesResponse {
+  count: number;
+  foodEntries: FoodEntries;
+}
+export async function getFoodEntries(): Promise<GetFoodEntriesResponse> {
+  const res = await httpService.get(`/entries`);
   return res.data;
 }

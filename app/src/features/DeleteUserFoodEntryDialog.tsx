@@ -3,23 +3,47 @@ import {
   deleteFoodEntry,
   DeleteFoodEntryInput,
   DeleteFoodEntryResponse,
-} from "api/foodEntry.service";
+} from "api";
 import { useMutation } from "react-query";
 import { queryClient } from "api";
 import { Button, Stack } from "@mui/material";
 import { FormEventHandler } from "react";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 
-export interface DeleteUserFoodEntryDialogProps {
-  open?: boolean;
-  onClose?: () => void;
+export default function RootDeleteUserFoodEntryDialog(props: {
   entryId: string;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <IconButton
+        color="error"
+        edge="end"
+        aria-label="Delete"
+        onClick={() => setOpen(true)}
+      >
+        <DeleteIcon />
+      </IconButton>
+      <DeleteUserFoodEntryDialog
+        {...props}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
 }
 
-export default function DeleteUserFoodEntryDialog({
+function DeleteUserFoodEntryDialog({
   open,
   onClose,
   entryId,
-}: DeleteUserFoodEntryDialogProps) {
+}: {
+  open?: boolean;
+  onClose?: () => void;
+  entryId: string;
+}) {
   return (
     <FormDialog title="Delete food entry?" open={open} onClose={onClose}>
       <DeleteUserFoodEntryForm
@@ -54,6 +78,7 @@ function DeleteUserFoodEntryForm({
       event.preventDefault();
       await mutation.mutateAsync({ id: entryId });
       queryClient.invalidateQueries("userFoodEntries");
+      queryClient.invalidateQueries("foodEntries");
       onSuccess?.();
     } catch (err) {
       onError?.();

@@ -2,7 +2,7 @@ import {
   createFoodEntry,
   CreateFoodEntryInput,
   CreateFoodEntryResponse,
-} from "api/foodEntry.service";
+} from "api";
 import { useMutation } from "react-query";
 import { DEFAULT_DATE_FORMAT } from "utils";
 import moment from "moment";

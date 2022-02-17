@@ -6,7 +6,7 @@ import UserDashboard from "./UserDashboard";
 import { useMemo } from "react";
 import UserFoodEntries from "./User";
 import Reports from "./Reports";
-import Users from "./Users";
+import FoodEntries from "./FoodEntries";
 
 export default function App() {
   const loggedUser = useLoggedUser();
@@ -17,7 +17,7 @@ export default function App() {
       if (isAdmin(loggedUser)) {
         return (
           <Route path="/admin" element={<AdminDashboard />}>
-            <Route index element={<Users />} />
+            <Route index element={<FoodEntries />} />
             <Route path="reports" element={<Reports />} />
           </Route>
         );

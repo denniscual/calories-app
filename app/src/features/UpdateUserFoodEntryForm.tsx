@@ -2,9 +2,9 @@ import {
   updateFoodEntry,
   UpdateFoodEntryInput,
   UpdateFoodEntryResponse,
-} from "api/foodEntry.service";
+  queryClient,
+} from "api";
 import { useMutation } from "react-query";
-import { queryClient } from "api";
 import FoodEntryForm, { FoodEntryFormValues } from "./FoodEntryForm";
 
 export default function UpdateUserFoodEntryForm({
@@ -39,6 +39,7 @@ export default function UpdateUserFoodEntryForm({
       };
       await mutation.mutateAsync(input);
       queryClient.invalidateQueries("userFoodEntries");
+      queryClient.invalidateQueries("foodEntries");
       onSuccess?.();
     } catch (err) {
       onError?.();

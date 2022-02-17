@@ -13,3 +13,6 @@ export const queryClient = new QueryClient({
 
 export * from "./AuthContext";
 export * from "./auth.service";
+export * from "./types";
+export * from "./foodEntry.service";
+export * from "./user.service";

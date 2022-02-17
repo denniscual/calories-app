@@ -10,7 +10,6 @@ import moment from 'moment';
 import { groupBy, toPairs } from 'lodash';
 
 // TODO:
-// - add the delete functionality.
 // - add the reports.
 
 export const getFoodEntries: RequestHandler = async (req, res) => {
@@ -21,12 +20,12 @@ export const getFoodEntries: RequestHandler = async (req, res) => {
       nest: true,
     });
 
-    res.status(HTTPStatuses.SUCCESS).send(
-      createResponseMessage('Food entries retrieved successfully.', {
+    setTimeout(() => {
+      res.status(HTTPStatuses.SUCCESS).send({
         foodEntries,
         count: foodEntries.length,
-      }),
-    );
+      });
+    }, 1000);
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)

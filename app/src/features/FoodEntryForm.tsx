@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useMemo, useState } from "react";
-import { FoodEntry } from "api/foodEntry.service";
+import { FoodEntry } from "api";
 import { Stack } from "@mui/material";
 
 export type FoodEntryFormValues = Pick<

@@ -1,8 +1,5 @@
-import { Fragment, useState } from "react";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { Fragment } from "react";
 import {
-  Button,
-  IconButton,
   List,
   ListItem,
   ListItemText,
@@ -23,12 +20,10 @@ import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import LunchDiningIcon from "@mui/icons-material/LunchDining";
 import BrunchDiningIcon from "@mui/icons-material/BrunchDining";
-import EditIcon from "@mui/icons-material/Edit";
 import { roundOff2DecimalPlaces } from "utils";
-import RootCreateUserFoodEntryDialog from "./CreateUserFoodEntryDialog";
-import RootUpdateUserFoodEntryDialog from "./UpdateUserFoodEntryDialog";
-import RootDeleteUserFoodEntryDialog from "./DeleteUserFoodEntryDialog";
-import { UpdateFoodEntryInput } from "api/foodEntry.service";
+import CreateUserFoodEntryDialog from "./CreateUserFoodEntryDialog";
+import UpdateUserFoodEntryDialog from "./UpdateUserFoodEntryDialog";
+import DeleteUserFoodEntryDialog from "./DeleteUserFoodEntryDialog";
 
 export default function UserFoodEntries({
   userId,
@@ -123,7 +118,7 @@ export default function UserFoodEntries({
               </CardContent>
             )}
             <CardActions disableSpacing>
-              <AddUserFoodEntryDialog
+              <CreateUserFoodEntryDialog
                 totalCaloriesForAllMeal={totalCaloriesForAllMeal}
                 meal={meal.label}
                 userId={data.id}
@@ -156,73 +151,3 @@ const meals = [
     icon: <LunchDiningIcon color="secondary" fontSize="small" />,
   },
 ];
-
-function AddUserFoodEntryDialog(props: {
-  userId: string;
-  meal: string;
-  totalCaloriesForAllMeal: number;
-  maxCalories: number;
-  maxPricePerMonth: number;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <Button
-        onClick={() => setOpen(true)}
-        sx={{
-          width: "100%",
-        }}
-        variant="text"
-      >
-        Add food
-      </Button>
-      <RootCreateUserFoodEntryDialog
-        {...props}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
-    </>
-  );
-}
-
-function UpdateUserFoodEntryDialog(props: {
-  totalCaloriesForAllMeal: number;
-  maxCalories: number;
-  maxPricePerMonth: number;
-  foodEntry: UpdateFoodEntryInput;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <IconButton edge="end" aria-label="Edit" onClick={() => setOpen(true)}>
-        <EditIcon />
-      </IconButton>
-      <RootUpdateUserFoodEntryDialog
-        {...props}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
-    </>
-  );
-}
-
-function DeleteUserFoodEntryDialog(props: { entryId: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <IconButton
-        color="error"
-        edge="end"
-        aria-label="Delete"
-        onClick={() => setOpen(true)}
-      >
-        <DeleteIcon />
-      </IconButton>
-      <RootDeleteUserFoodEntryDialog
-        {...props}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
-    </>
-  );
-}

@@ -1,17 +1,20 @@
 import KitchenIcon from "@mui/icons-material/Kitchen";
-import { MenuList, PageLayout } from "components";
+import {
+  MenuList,
+  PageLayout,
+  DatePickerPopover,
+  ErrorBoundary,
+} from "components";
 import TopBar from "./TopBar";
 import { Outlet } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import moment from "moment";
-import { DatePickerPopover } from "components";
 import { useLoggedUser } from "api";
 import {
   Suspense,
   // @ts-expect-error `useTransition` is not yet included on "@types/react".
   useTransition,
 } from "react";
-import { ErrorBoundary } from "components";
 import { useDate } from "./DateContext";
 import { DEFAULT_DATE_FORMAT } from "utils";
 
@@ -42,7 +45,7 @@ export default function UserDashboard() {
       main={
         <>
           <ErrorBoundary>
-            <Suspense fallback={<div>Fetching user food entries...</div>}>
+            <Suspense fallback={<div>Loading your dashboard...</div>}>
               <Outlet />
             </Suspense>
           </ErrorBoundary>

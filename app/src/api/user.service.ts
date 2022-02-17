@@ -1,11 +1,7 @@
 import { httpService } from "./config.service";
-import { FoodEntry } from "./foodEntry.service";
+import { User, FoodEntry } from "./types";
 
-export interface GetUserFoodEntriesResponse {
-  id: string;
-  fullName: string;
-  maxCalories: number;
-  maxPricePerMonth: number;
+export interface GetUserFoodEntriesResponse extends User {
   foodEntries: FoodEntry[];
 }
 
