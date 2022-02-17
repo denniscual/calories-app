@@ -151,9 +151,11 @@ export const deleteFoodEntry: RequestHandler = async (req, res) => {
       },
     });
 
-    res
-      .status(HTTPStatuses.SUCCESS)
-      .send(createResponseMessage('Food entry deleted successfully.'));
+    setTimeout(() => {
+      res
+        .status(HTTPStatuses.SUCCESS)
+        .send(createResponseMessage('Food entry deleted successfully.'));
+    }, 1000);
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)

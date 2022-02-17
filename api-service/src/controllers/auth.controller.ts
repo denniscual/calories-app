@@ -79,21 +79,21 @@ export const signin: RequestHandler = (req, res) => {
       const token = generateToken(user.id);
 
       user.getRoles().then((roles) => {
-        // setTimeout(() => {
-        // }, 3000);
-        res.status(HTTPStatuses.SUCCESS).send(
-          createResponseMessage('Successfully signed in', {
-            id: user.id,
-            username: user.username,
-            fullName: user.fullName,
-            maxCalories: user.maxCalories,
-            maxPricePerMonth: user.maxPricePerMonth,
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-            roles: roles.map((role) => role.name),
-            accessToken: token,
-          }),
-        );
+        setTimeout(() => {
+          res.status(HTTPStatuses.SUCCESS).send(
+            createResponseMessage('Successfully signed in', {
+              id: user.id,
+              username: user.username,
+              fullName: user.fullName,
+              maxCalories: user.maxCalories,
+              maxPricePerMonth: user.maxPricePerMonth,
+              createdAt: user.createdAt,
+              updatedAt: user.updatedAt,
+              roles: roles.map((role) => role.name),
+              accessToken: token,
+            }),
+          );
+        }, 1000);
       });
     })
     .catch((err) => {

@@ -29,7 +29,7 @@ export default function Login() {
           elevation={6}
           sx={{
             p: 8,
-            maxWidth: "55%",
+            maxWidth: 550,
             m: "auto",
           }}
         >

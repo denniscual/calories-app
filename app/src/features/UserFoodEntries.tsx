@@ -27,6 +27,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { roundOff2DecimalPlaces } from "utils";
 import RootCreateUserFoodEntryDialog from "./CreateUserFoodEntryDialog";
 import RootUpdateUserFoodEntryDialog from "./UpdateUserFoodEntryDialog";
+import RootDeleteUserFoodEntryDialog from "./DeleteUserFoodEntryDialog";
 import { UpdateFoodEntryInput } from "api/foodEntry.service";
 
 export default function UserFoodEntries({
@@ -106,13 +107,7 @@ export default function UserFoodEntries({
                               }}
                             />
 
-                            <IconButton
-                              color="error"
-                              edge="end"
-                              aria-label="Delete"
-                            >
-                              <DeleteIcon />
-                            </IconButton>
+                            <DeleteUserFoodEntryDialog entryId={entry.id} />
                           </Stack>
                         }
                       >
@@ -203,6 +198,27 @@ function UpdateUserFoodEntryDialog(props: {
         <EditIcon />
       </IconButton>
       <RootUpdateUserFoodEntryDialog
+        {...props}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}
+
+function DeleteUserFoodEntryDialog(props: { entryId: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <IconButton
+        color="error"
+        edge="end"
+        aria-label="Delete"
+        onClick={() => setOpen(true)}
+      >
+        <DeleteIcon />
+      </IconButton>
+      <RootDeleteUserFoodEntryDialog
         {...props}
         open={open}
         onClose={() => setOpen(false)}

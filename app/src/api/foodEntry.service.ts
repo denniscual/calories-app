@@ -31,3 +31,16 @@ export async function updateFoodEntry(
   const res = await httpService.put(`/entries/${input.id}`, input);
   return res.data;
 }
+
+export interface DeleteFoodEntryResponse {
+  message: string;
+}
+export interface DeleteFoodEntryInput {
+  id: string;
+}
+export async function deleteFoodEntry(
+  input: DeleteFoodEntryInput
+): Promise<DeleteFoodEntryResponse> {
+  const res = await httpService.delete(`/entries/${input.id}`);
+  return res.data;
+}
