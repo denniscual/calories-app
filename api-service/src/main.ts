@@ -1,3 +1,7 @@
+import path from 'path';
+import dotenv from 'dotenv';
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
 import express from 'express';
 import cors from 'cors';
 import db from './models';
@@ -10,7 +14,6 @@ const app = express();
 const corsOptions = {
   origin: '*',
 };
-
 app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json());

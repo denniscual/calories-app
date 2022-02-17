@@ -1,8 +1,8 @@
 export default {
-  HOST: 'localhost',
-  USER: 'root',
-  PASSWORD: 'Irishjane_123',
-  DB: 'calories_app',
+  HOST: process.env.DB_HOST,
+  USER: process.env.DB_USER,
+  PASSWORD: process.env.DB_PASSWORD,
+  DB: process.env.DB_NAME,
   dialect: 'mysql',
   pool: {
     max: 5,

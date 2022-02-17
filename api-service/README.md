@@ -1,6 +1,11 @@
 # Repository for the Calories App API
 
-🏃🏽 Instant Value: All basic tools included and configured:
+## Getting Started
+
+- Download the [MySQL server](https://dev.mysql.com/downloads/mysql/) and spin a localhost dv server.
+- Create `.env` file at the root of the directory. Fill all the required env variables.
+
+## Tools and tech stack
 
 - [TypeScript][typescript] [4.5][typescript-4-5]
 - [ESLint][eslint] with some initial rules recommendation
@@ -9,10 +14,8 @@
 - [Prettier][prettier] to enforce consistent code style
 - NPM [scripts](#available-scripts) for common operations
 - Simple example of TypeScript code and unit test
-
-## Getting Started
-
-This project is intended to be used with the latest Active LTS release of [Node.js][nodejs].
+- [Sequelize ORM for MySQL](https://sequelize.org/).
+- [Expressjs](https://expressjs.com/) for building api.
 
 ## Available Scripts
 
