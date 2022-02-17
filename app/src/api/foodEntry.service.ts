@@ -31,7 +31,7 @@ export interface DeleteFoodEntryInput {
 export async function deleteFoodEntry(
   input: DeleteFoodEntryInput
 ): Promise<DeleteFoodEntryResponse> {
-  const res = await httpService.delete(`/entries/${input}`);
+  const res = await httpService.delete(`/entries/${input.id}`);
   return res.data;
 }
 
