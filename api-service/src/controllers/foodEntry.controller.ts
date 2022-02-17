@@ -20,6 +20,14 @@ export const getFoodEntries: RequestHandler = async (req, res) => {
       nest: true,
     });
 
+    foodEntries.sort(
+      (a, b) =>
+        // @ts-expect-error Error on type
+        moment(b.createdAt) -
+        // @ts-expect-error Error on type
+        moment(a.createdAt),
+    );
+
     setTimeout(() => {
       res.status(HTTPStatuses.SUCCESS).send({
         foodEntries,

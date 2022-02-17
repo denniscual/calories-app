@@ -72,6 +72,7 @@ export default function FoodEntries() {
                       numOfCalories={entry.numOfCalories}
                       createdAt={entry.createdAt}
                       userFullName={entry.user.fullName}
+                      userId={entry.user.id}
                     />
                   }
                 />
@@ -89,10 +90,12 @@ function FoodEntryDescription({
   numOfCalories,
   createdAt,
   userFullName,
+  userId,
 }: {
   numOfCalories: number;
   createdAt: string;
   userFullName: string;
+  userId: string;
 }) {
   const date = moment(createdAt).format("ll");
   return (
@@ -105,7 +108,7 @@ function FoodEntryDescription({
       >
         -
       </strong>{" "}
-      created <TimeAgo date={date} /> by <Link to="">{userFullName}</Link>
+      created {date} by <Link to={`users/${userId}`}>{userFullName}</Link>
     </span>
   );
 }

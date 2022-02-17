@@ -2,7 +2,8 @@
 
 ## Getting Started
 
-- Download the [MySQL server](https://dev.mysql.com/downloads/mysql/) and spin a localhost dv server.
+- Make sure you have [nodejs](https://nodejs.org/en/) installed in your computer.
+- Download the [MySQL server](https://dev.mysql.com/downloads/mysql/) and spin a localhost db server.
 - Create `.env` file at the root of the directory. Fill all the required env variables.
 - Checkout out in `master` branch, then run `yarn install`.
 
