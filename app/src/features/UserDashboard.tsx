@@ -1,64 +1,38 @@
-import KitchenIcon from "@mui/icons-material/Kitchen";
-import {
-  MenuList,
-  PageLayout,
-  DatePickerPopover,
-  ErrorBoundary,
-} from "components";
-import TopBar from "./TopBar";
-import { Outlet } from "react-router-dom";
-import { useSearchParams } from "react-router-dom";
-import moment from "moment";
 import { useLoggedUser } from "api";
-import {
-  Suspense,
-  // @ts-expect-error `useTransition` is not yet included on "@types/react".
-  useTransition,
-} from "react";
+import UserFoodEntries from "./UserFoodEntries";
+import { Paper } from "@mui/material";
+import MyDailyCalories from "./MyDailyCalories";
 import { useDate } from "./DateContext";
-import { DEFAULT_DATE_FORMAT } from "utils";
 
 export default function UserDashboard() {
-  const [, setDate] = useDate();
-  const [, startTransition] = useTransition({ timeoutMs: 5000 });
   const loggedUser = useLoggedUser();
-  const [searchParams, setSearchParams] = useSearchParams({
-    date: moment().format(DEFAULT_DATE_FORMAT),
-  });
+  const [date] = useDate();
 
   return (
-    <PageLayout
-      topBar={
-        <TopBar fullName={loggedUser.fullName}>
-          <DatePickerPopover
-            value={searchParams.get("date") as string}
-            onChange={(chosenDate) => {
-              startTransition(() => setDate(chosenDate));
-              setSearchParams({
-                date: chosenDate,
-              });
-            }}
-          />
-        </TopBar>
-      }
-      nav={<MenuList items={menuList} />}
-      main={
-        <>
-          <ErrorBoundary>
-            <Suspense fallback={<div>Loading your dashboard...</div>}>
-              <Outlet />
-            </Suspense>
-          </ErrorBoundary>
-        </>
-      }
-    />
+    <div
+      style={{
+        display: "flex",
+        gap: 32,
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+        }}
+      >
+        <UserFoodEntries userId={loggedUser.id} date={date} />
+      </div>
+      <Paper
+        elevation={8}
+        style={{
+          alignSelf: "flex-start",
+        }}
+        sx={{
+          p: 2,
+        }}
+      >
+        <MyDailyCalories userId={loggedUser.id} date={date} />
+      </Paper>
+    </div>
   );
 }
-
-const menuList = [
-  {
-    label: "Daily Log",
-    icon: <KitchenIcon fontSize="small" />,
-    to: "",
-  },
-];

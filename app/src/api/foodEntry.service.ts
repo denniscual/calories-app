@@ -31,7 +31,7 @@ export interface DeleteFoodEntryInput {
 export async function deleteFoodEntry(
   input: DeleteFoodEntryInput
 ): Promise<DeleteFoodEntryResponse> {
-  const res = await httpService.delete(`/entries/${input.id}`);
+  const res = await httpService.delete(`/entries/${input}`);
   return res.data;
 }
 
@@ -41,5 +41,19 @@ export interface GetFoodEntriesResponse {
 }
 export async function getFoodEntries(): Promise<GetFoodEntriesResponse> {
   const res = await httpService.get(`/entries`);
+  return res.data;
+}
+
+export interface GetFoodEntriesReportResponse {
+  totalNumOfFoodEntries: number;
+  dataPoints: { date: string; foodEntriesCount: number }[];
+}
+export type GetFoodEntriesReportVariables = {
+  date: string;
+};
+export async function getFoodEntriesReport({
+  date,
+}: GetFoodEntriesReportVariables): Promise<GetFoodEntriesReportResponse> {
+  const res = await httpService.get(`/entries/report?date=${date}`);
   return res.data;
 }
