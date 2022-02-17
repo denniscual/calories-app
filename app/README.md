@@ -1,6 +1,6 @@
 # Repository for the Calories App
 
-## Installation
+## Getting Started
 
 Checkout out in `master` branch, then run `yarn install`.
 

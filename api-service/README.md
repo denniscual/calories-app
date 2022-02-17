@@ -4,6 +4,7 @@
 
 - Download the [MySQL server](https://dev.mysql.com/downloads/mysql/) and spin a localhost dv server.
 - Create `.env` file at the root of the directory. Fill all the required env variables.
+- Checkout out in `master` branch, then run `yarn install`.
 
 ## Tools and tech stack
 
