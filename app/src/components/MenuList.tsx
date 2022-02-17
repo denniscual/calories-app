@@ -1,4 +1,4 @@
-import { Link, LinkProps, useResolvedPath, useMatch } from "react-router-dom";
+import { Link, useResolvedPath, useMatch } from "react-router-dom";
 import RootMenuList from "@mui/material/MenuList";
 import RootMenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -15,6 +15,8 @@ interface MenuListProps {
   items: MenuItemType[];
 }
 
+// TODO:
+// - The link is not "active" if the route is nested. Support nested routes.
 export function MenuList({ items }: MenuListProps) {
   return (
     <RootMenuList component="div">

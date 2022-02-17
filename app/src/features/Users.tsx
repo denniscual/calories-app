@@ -7,8 +7,8 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
-import { getUsers, GetUsersResponse } from "api";
 import { Fragment } from "react";
+import { getUsers, GetUsersResponse } from "api";
 import { useQuery } from "react-query";
 import { roundOff2DecimalPlaces } from "utils";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -22,7 +22,7 @@ export default function Users() {
     <Stack gap={4}>
       <Typography
         sx={{
-          fontSize: "h3.fontSize",
+          fontSize: "h5.fontSize",
         }}
         variant="h1"
       >
@@ -31,9 +31,6 @@ export default function Users() {
       <Paper
         component={List}
         elevation={8}
-        style={{
-          alignSelf: "flex-start",
-        }}
         sx={{
           p: 2,
           width: "100%",

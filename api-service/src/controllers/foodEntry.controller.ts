@@ -219,12 +219,12 @@ export const getFoodEntriesReport: RequestHandler = async (req, res) => {
       0,
     );
 
-    res.status(HTTPStatuses.SUCCESS).send(
-      createResponseMessage('Food entries retrieved successfully.', {
+    setTimeout(() => {
+      res.status(HTTPStatuses.SUCCESS).send({
         totalNumOfFoodEntries,
         dataPoints: sortedDatesWithFoodEntriesCount,
-      }),
-    );
+      });
+    }, 1000);
   } catch (err) {
     res
       .status(HTTPStatuses.BAD_REQUEST)

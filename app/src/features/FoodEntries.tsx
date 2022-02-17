@@ -26,7 +26,7 @@ export default function FoodEntries() {
     <Stack gap={4}>
       <Typography
         sx={{
-          fontSize: "h3.fontSize",
+          fontSize: "h5.fontSize",
         }}
         variant="h1"
       >
@@ -35,9 +35,6 @@ export default function FoodEntries() {
       <Paper
         component={List}
         elevation={8}
-        style={{
-          alignSelf: "flex-start",
-        }}
         sx={{
           p: 2,
           width: "100%",

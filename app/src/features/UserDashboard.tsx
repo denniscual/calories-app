@@ -4,7 +4,7 @@ import { Paper } from "@mui/material";
 import MyDailyCalories from "./MyDailyCalories";
 import { useDate } from "./DateContext";
 
-export default function User() {
+export default function UserDashboard() {
   const loggedUser = useLoggedUser();
   const [date] = useDate();
 

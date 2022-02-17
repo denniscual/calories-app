@@ -4,7 +4,7 @@ import Login from "./Login";
 import AdminPageLayout from "./AdminPageLayout";
 import UserPageLayout from "./UserPageLayout";
 import { useMemo } from "react";
-import UserFoodEntries from "./User";
+import UserDashboard from "./UserDashboard";
 import Reports from "./Reports";
 import FoodEntries from "./FoodEntries";
 import Users from "./Users";
@@ -19,14 +19,17 @@ export default function App() {
         return (
           <Route path="/" element={<AdminPageLayout />}>
             <Route index element={<FoodEntries />} />
-            <Route path="users" element={<Users />} />
+            <Route path="users">
+              <Route index element={<Users />} />
+              <Route path=":userId" element={<div>User page</div>} />
+            </Route>
             <Route path="reports" element={<Reports />} />
           </Route>
         );
       }
       return (
         <Route path="/user" element={<UserPageLayout />}>
-          <Route index element={<UserFoodEntries />} />
+          <Route index element={<UserDashboard />} />
         </Route>
       );
     }
