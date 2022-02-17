@@ -1,14 +1,12 @@
-import { Pie } from "react-chartjs-2";
 import { Typography } from "@mui/material";
 import {
   getUserFoodEntries,
   GetUserFoodEntriesResponse,
 } from "api/user.service";
 import { useQuery } from "react-query";
+import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { roundOff2DecimalPlaces } from "utils";
-
-ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function MyDailyCalories({
   userId,
@@ -62,3 +60,5 @@ export default function MyDailyCalories({
     </div>
   );
 }
+
+ChartJS.register(ArcElement, Tooltip, Legend);
