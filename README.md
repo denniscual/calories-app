@@ -4,7 +4,7 @@ This is a monorepo, built using yarn workspace, for the "api" and "app" reposito
 
 ## Getting Started
 
-Checkout out in `master` branch, then run `yarn install`.
+Checkout out in `master` branch, then run `yarn install`. [Click this link to watch the working functionality of the app.](https://drive.google.com/file/d/1OZHPNfbecHWm65mcv3beR4U6H9eBHyU6/view?usp=sharing)
 
 ## Available scripts
 
