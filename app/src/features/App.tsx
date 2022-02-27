@@ -11,6 +11,8 @@ import AppProviders from './AppProviders'
 // - do a review.
 // - create `components` directory inside features and move some generic feature-based components.
 // - refactor our AuthContext. Check bulletproof-react. Support Storage-based auth and cookie-based auth.
+// - refactor our API. I think we gonna move our hooks for react-query inside the api directory. Abstract it and make sure we can change the data fetching to other library
+//   with minimum changes. Like migrating to swr.
 // - add tests.
 // - push the repo to Github and setup CI/CD in github.
 // - setup Cypress.
