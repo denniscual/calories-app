@@ -1,14 +1,14 @@
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import { MenuList, PageLayout, ErrorBoundary } from "components";
-import TopBar from "./TopBar";
-import { Outlet } from "react-router-dom";
-import KitchenIcon from "@mui/icons-material/Kitchen";
-import GroupIcon from "@mui/icons-material/Group";
-import { useLoggedUser } from "api";
-import { Suspense } from "react";
+import MenuBookIcon from '@mui/icons-material/MenuBook'
+import { MenuList, PageLayout, ErrorBoundary } from 'components'
+import TopBar from './TopBar'
+import { Outlet } from 'react-router-dom'
+import KitchenIcon from '@mui/icons-material/Kitchen'
+import GroupIcon from '@mui/icons-material/Group'
+import { useLoggedUser } from 'api'
+import { Suspense } from 'react'
 
 export default function AdminPageLayout() {
-  const loggedUser = useLoggedUser();
+  const loggedUser = useLoggedUser()
   return (
     <PageLayout
       topBar={<TopBar fullName={loggedUser.fullName} />}
@@ -21,23 +21,23 @@ export default function AdminPageLayout() {
         </ErrorBoundary>
       }
     />
-  );
+  )
 }
 
 const menuList = [
   {
-    label: "Food entries",
+    label: 'Food entries',
     icon: <KitchenIcon fontSize="small" />,
-    to: "",
+    to: '',
   },
   {
-    label: "Users",
+    label: 'Users',
     icon: <GroupIcon fontSize="small" />,
-    to: "users",
+    to: 'users',
   },
   {
-    label: "Reports",
+    label: 'Reports',
     icon: <MenuBookIcon fontSize="small" />,
-    to: "reports",
+    to: 'reports',
   },
-];
+]
