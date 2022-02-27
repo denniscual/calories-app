@@ -8,7 +8,9 @@ import '@fontsource/roboto/700.css'
 import AppProviders from './AppProviders'
 
 // TODO:
-// - refactor our AuthContext. Check bulletproof-react.
+// - do a review.
+// - create `components` directory inside features and move some generic feature-based components.
+// - refactor our AuthContext. Check bulletproof-react. Support Storage-based auth and cookie-based auth.
 // - add tests.
 // - push the repo to Github and setup CI/CD in github.
 // - setup Cypress.
