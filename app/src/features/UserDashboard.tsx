@@ -1,17 +1,17 @@
-import { useLoggedUser } from "api";
-import UserFoodEntries from "./UserFoodEntries";
-import { Paper } from "@mui/material";
-import MyDailyCalories from "./MyDailyCalories";
-import { useDate } from "./DateContext";
+import { useLoggedUser } from 'api'
+import UserFoodEntries from './UserFoodEntries'
+import { Paper } from '@mui/material'
+import MyDailyCalories from './MyDailyCalories'
+import { useDate } from './DateContext'
 
 export default function UserDashboard() {
-  const loggedUser = useLoggedUser();
-  const [date] = useDate();
+  const loggedUser = useLoggedUser()
+  const [date] = useDate()
 
   return (
     <div
       style={{
-        display: "flex",
+        display: 'flex',
         gap: 32,
       }}
     >
@@ -25,7 +25,7 @@ export default function UserDashboard() {
       <Paper
         elevation={8}
         style={{
-          alignSelf: "flex-start",
+          alignSelf: 'flex-start',
         }}
         sx={{
           p: 2,
@@ -34,5 +34,5 @@ export default function UserDashboard() {
         <MyDailyCalories userId={loggedUser.id} date={date} />
       </Paper>
     </div>
-  );
+  )
 }
