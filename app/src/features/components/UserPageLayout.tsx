@@ -5,7 +5,7 @@ import {
   DatePickerPopover,
   ErrorBoundary,
 } from 'components'
-import TopBar from './TopBar'
+import { TopBar } from '.'
 import { Outlet } from 'react-router-dom'
 import { useSearchParams } from 'react-router-dom'
 import moment from 'moment'
@@ -15,10 +15,10 @@ import {
   // @ts-expect-error `useTransition` is not yet included on "@types/react".
   useTransition,
 } from 'react'
-import { useDate } from './DateContext'
+import { useDate } from '../DateContext'
 import { DEFAULT_DATE_FORMAT } from 'utils'
 
-export default function UserPageLayout() {
+export function UserPageLayout() {
   const [, setDate] = useDate()
   const [, startTransition] = useTransition({ timeoutMs: 5000 })
   const loggedUser = useLoggedUser()

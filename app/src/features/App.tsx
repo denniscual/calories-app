@@ -8,8 +8,6 @@ import '@fontsource/roboto/700.css'
 import AppProviders from './AppProviders'
 
 // TODO:
-// - do a review.
-// - create `components` directory inside features and move some generic feature-based components.
 // - refactor our AuthContext. Check bulletproof-react. Support Storage-based auth and cookie-based auth.
 // - refactor our API. I think we gonna move our hooks for react-query inside the api directory. Abstract it and make sure we can change the data fetching to other library
 //   with minimum changes. Like migrating to swr.

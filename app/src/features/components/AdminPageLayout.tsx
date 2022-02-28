@@ -1,13 +1,13 @@
 import MenuBookIcon from '@mui/icons-material/MenuBook'
 import { MenuList, PageLayout, ErrorBoundary } from 'components'
-import TopBar from './TopBar'
+import { TopBar } from '.'
 import { Outlet } from 'react-router-dom'
 import KitchenIcon from '@mui/icons-material/Kitchen'
 import GroupIcon from '@mui/icons-material/Group'
 import { useLoggedUser } from 'api'
 import { Suspense } from 'react'
 
-export default function AdminPageLayout() {
+export function AdminPageLayout() {
   const loggedUser = useLoggedUser()
   return (
     <PageLayout

@@ -1,7 +1,7 @@
-import { Stack, Typography, Paper } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import { Stack, Typography, Paper } from '@mui/material'
+import { Outlet } from 'react-router-dom'
 
-export default function PublicPageLayout() {
+export function PublicPageLayout() {
   return (
     <Stack
       spacing={6}
@@ -13,7 +13,7 @@ export default function PublicPageLayout() {
         variant="h1"
         align="center"
         sx={{
-          fontSize: "h4.fontSize",
+          fontSize: 'h4.fontSize',
         }}
         fontWeight={600}
       >
@@ -25,12 +25,12 @@ export default function PublicPageLayout() {
           sx={{
             p: 8,
             maxWidth: 550,
-            m: "auto",
+            m: 'auto',
           }}
         >
           <Outlet />
         </Paper>
       </main>
     </Stack>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import AdminPageLayout from 'features/AdminPageLayout'
+import { AdminPageLayout } from 'features/components'
 import FoodEntries from 'features/FoodEntries'
 import Reports from 'features/Reports'
 import Users from 'features/Users'

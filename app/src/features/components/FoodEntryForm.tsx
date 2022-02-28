@@ -1,17 +1,17 @@
-import { TextField, Snackbar } from "components";
-import Button from "@mui/material/Button";
-import * as Yup from "yup";
-import { useFormik } from "formik";
-import { useMemo, useState } from "react";
-import { FoodEntry } from "api";
-import { Stack } from "@mui/material";
+import { TextField, Snackbar } from 'components'
+import Button from '@mui/material/Button'
+import * as Yup from 'yup'
+import { useFormik } from 'formik'
+import { useMemo, useState } from 'react'
+import { FoodEntry } from 'api'
+import { Stack } from '@mui/material'
 
 export type FoodEntryFormValues = Pick<
   FoodEntry,
-  "name" | "numOfCalories" | "price"
->;
+  'name' | 'numOfCalories' | 'price'
+>
 
-export default function FoodEntryForm({
+export function FoodEntryForm({
   totalCaloriesForAllMeal,
   totalPriceForMonth = 0,
   maxCalories,
@@ -20,19 +20,19 @@ export default function FoodEntryForm({
   onCancel,
   isFormLoading = false,
   initialValues,
-  primaryActionButtonTitle = "",
+  primaryActionButtonTitle = '',
 }: {
-  totalCaloriesForAllMeal: number;
-  totalPriceForMonth?: number;
-  maxCalories: number;
-  maxPricePerMonth: number;
-  onSubmit: (foodEntry: FoodEntryFormValues) => void;
-  onCancel?: () => void;
-  isFormLoading?: boolean;
-  initialValues: FoodEntryFormValues;
-  primaryActionButtonTitle?: string;
+  totalCaloriesForAllMeal: number
+  totalPriceForMonth?: number
+  maxCalories: number
+  maxPricePerMonth: number
+  onSubmit: (foodEntry: FoodEntryFormValues) => void
+  onCancel?: () => void
+  isFormLoading?: boolean
+  initialValues: FoodEntryFormValues
+  primaryActionButtonTitle?: string
 }) {
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false)
 
   const validationSchema = useMemo(() => {
     return createValidationSchema({
@@ -40,26 +40,26 @@ export default function FoodEntryForm({
       maxPricePerMonth,
       totalCaloriesForAllMeal,
       totalPriceForMonth,
-    });
+    })
   }, [
     maxCalories,
     maxPricePerMonth,
     totalCaloriesForAllMeal,
     totalPriceForMonth,
-  ]);
+  ])
 
   const formik = useFormik({
     initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        await onSubmit(values);
+        await onSubmit(values)
       } catch (err) {
-        setOpenSnackbar(true);
-        throw err;
+        setOpenSnackbar(true)
+        throw err
       }
     },
-  });
+  })
 
   return (
     <>
@@ -71,7 +71,7 @@ export default function FoodEntryForm({
             fullWidth
             error={Boolean(formik.touched.name && formik.errors.name)}
             helperText={formik.touched.name && formik.errors.name}
-            {...formik.getFieldProps("name")}
+            {...formik.getFieldProps('name')}
           />
           <TextField
             margin="dense"
@@ -84,7 +84,7 @@ export default function FoodEntryForm({
             helperText={
               formik.touched.numOfCalories && formik.errors.numOfCalories
             }
-            {...formik.getFieldProps("numOfCalories")}
+            {...formik.getFieldProps('numOfCalories')}
           />
           <TextField
             margin="dense"
@@ -93,7 +93,7 @@ export default function FoodEntryForm({
             fullWidth
             error={Boolean(formik.touched.price && formik.errors.price)}
             helperText={formik.touched.price && formik.errors.price}
-            {...formik.getFieldProps("price")}
+            {...formik.getFieldProps('price')}
           />
           <Stack direction="row" gap={1} justifyContent="flex-end">
             <Button type="button" onClick={onCancel}>
@@ -113,7 +113,7 @@ export default function FoodEntryForm({
         Sorry something went wrong. Please try again later
       </Snackbar>
     </>
-  );
+  )
 }
 
 function createValidationSchema({
@@ -122,30 +122,30 @@ function createValidationSchema({
   totalCaloriesForAllMeal,
   totalPriceForMonth,
 }: {
-  maxCalories: number;
-  maxPricePerMonth: number;
-  totalCaloriesForAllMeal: number;
-  totalPriceForMonth: number;
+  maxCalories: number
+  maxPricePerMonth: number
+  totalCaloriesForAllMeal: number
+  totalPriceForMonth: number
 }) {
   return Yup.object().shape({
-    name: Yup.string().required("This field is required"),
+    name: Yup.string().required('This field is required'),
     numOfCalories: Yup.number()
-      .required("This field is required")
+      .required('This field is required')
       .moreThan(0)
-      .max(maxCalories, "You reached the max calories limit.")
+      .max(maxCalories, 'You reached the max calories limit.')
       .test(
-        "Max calories",
-        "You reached the max calories limit.",
+        'Max calories',
+        'You reached the max calories limit.',
         (value) => value + totalCaloriesForAllMeal <= maxCalories
       ),
     price: Yup.number()
-      .required("This field is required")
+      .required('This field is required')
       .moreThan(0)
-      .max(maxPricePerMonth, "You reached the max price per month limit.")
+      .max(maxPricePerMonth, 'You reached the max price per month limit.')
       .test(
-        "Max price",
-        "You reached the max pricerper month limit.",
+        'Max price',
+        'You reached the max pricerper month limit.',
         (value) => value + totalPriceForMonth <= maxPricePerMonth
       ),
-  });
+  })
 }

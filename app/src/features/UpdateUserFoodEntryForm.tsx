@@ -3,9 +3,9 @@ import {
   UpdateFoodEntryInput,
   UpdateFoodEntryResponse,
   queryClient,
-} from "api";
-import { useMutation } from "react-query";
-import FoodEntryForm, { FoodEntryFormValues } from "./FoodEntryForm";
+} from 'api'
+import { useMutation } from 'react-query'
+import { FoodEntryForm, FoodEntryFormValues } from './components'
 
 export default function UpdateUserFoodEntryForm({
   foodEntry,
@@ -16,19 +16,19 @@ export default function UpdateUserFoodEntryForm({
   maxCalories,
   maxPricePerMonth,
 }: {
-  foodEntry: UpdateFoodEntryInput;
-  onSuccess?: () => void;
-  onError?: () => void;
-  onCancel?: () => void;
-  totalCaloriesForAllMeal: number;
-  maxCalories: number;
-  maxPricePerMonth: number;
+  foodEntry: UpdateFoodEntryInput
+  onSuccess?: () => void
+  onError?: () => void
+  onCancel?: () => void
+  totalCaloriesForAllMeal: number
+  maxCalories: number
+  maxPricePerMonth: number
 }) {
   const mutation = useMutation<
     UpdateFoodEntryResponse,
     Error,
     UpdateFoodEntryInput
-  >(updateFoodEntry);
+  >(updateFoodEntry)
 
   async function handleSubmit(values: FoodEntryFormValues) {
     try {
@@ -36,14 +36,14 @@ export default function UpdateUserFoodEntryForm({
         ...values,
         id: foodEntry.id,
         meal: foodEntry.meal,
-      };
-      await mutation.mutateAsync(input);
-      queryClient.invalidateQueries("userFoodEntries");
-      queryClient.invalidateQueries("foodEntries");
-      onSuccess?.();
+      }
+      await mutation.mutateAsync(input)
+      queryClient.invalidateQueries('userFoodEntries')
+      queryClient.invalidateQueries('foodEntries')
+      onSuccess?.()
     } catch (err) {
-      onError?.();
-      throw err;
+      onError?.()
+      throw err
     }
   }
 
@@ -51,7 +51,7 @@ export default function UpdateUserFoodEntryForm({
     name: foodEntry.name,
     numOfCalories: foodEntry.numOfCalories,
     price: foodEntry.price,
-  };
+  }
 
   return (
     <FoodEntryForm
@@ -64,5 +64,5 @@ export default function UpdateUserFoodEntryForm({
       initialValues={initialValues}
       primaryActionButtonTitle="Edit"
     />
-  );
+  )
 }

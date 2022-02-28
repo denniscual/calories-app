@@ -1,5 +1,5 @@
 import UserDashboard from 'features/UserDashboard'
-import UserPageLayout from 'features/UserPageLayout'
+import { UserPageLayout } from 'features/components'
 import { RouteObject } from 'react-router-dom'
 
 export const userRoutes: RouteObject[] = [

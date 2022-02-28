@@ -2,13 +2,13 @@ import {
   createFoodEntry,
   CreateFoodEntryInput,
   CreateFoodEntryResponse,
-} from "api";
-import { useMutation } from "react-query";
-import { DEFAULT_DATE_FORMAT } from "utils";
-import moment from "moment";
-import { useSearchParams } from "react-router-dom";
-import { queryClient } from "api";
-import UseFoodEntryForm, { FoodEntryFormValues } from "./FoodEntryForm";
+} from 'api'
+import { useMutation } from 'react-query'
+import { DEFAULT_DATE_FORMAT } from 'utils'
+import moment from 'moment'
+import { useSearchParams } from 'react-router-dom'
+import { queryClient } from 'api'
+import { FoodEntryFormValues, FoodEntryForm } from './components'
 
 export default function CreateUserFoodEntryForm({
   userId,
@@ -20,54 +20,54 @@ export default function CreateUserFoodEntryForm({
   maxCalories,
   maxPricePerMonth,
 }: {
-  userId: string;
-  meal: string;
-  onSuccess?: () => void;
-  onError?: () => void;
-  onCancel?: () => void;
-  totalCaloriesForAllMeal: number;
-  maxCalories: number;
-  maxPricePerMonth: number;
+  userId: string
+  meal: string
+  onSuccess?: () => void
+  onError?: () => void
+  onCancel?: () => void
+  totalCaloriesForAllMeal: number
+  maxCalories: number
+  maxPricePerMonth: number
 }) {
   const [searchParams] = useSearchParams({
     date: moment().format(DEFAULT_DATE_FORMAT),
-  });
-  const date = searchParams.get("date") as string;
+  })
+  const date = searchParams.get('date') as string
 
   const mutation = useMutation<
     CreateFoodEntryResponse,
     Error,
     CreateFoodEntryInput
-  >(createFoodEntry);
+  >(createFoodEntry)
 
   async function handleSubmit(values: FoodEntryFormValues) {
     try {
-      const chosenDate = moment(date).utc().format();
+      const chosenDate = moment(date).utc().format()
       const input = {
         ...values,
         createdAt: chosenDate,
         updatedAt: chosenDate,
         meal,
         userId,
-      };
+      }
 
-      await mutation.mutateAsync(input);
-      queryClient.invalidateQueries("userFoodEntries");
-      onSuccess?.();
+      await mutation.mutateAsync(input)
+      queryClient.invalidateQueries('userFoodEntries')
+      onSuccess?.()
     } catch (err) {
-      onError?.();
-      throw err;
+      onError?.()
+      throw err
     }
   }
 
   const initialValues = {
-    name: "",
+    name: '',
     numOfCalories: 0,
     price: 0,
-  };
+  }
 
   return (
-    <UseFoodEntryForm
+    <FoodEntryForm
       primaryActionButtonTitle="Add"
       totalCaloriesForAllMeal={totalCaloriesForAllMeal}
       maxCalories={maxCalories}
@@ -77,5 +77,5 @@ export default function CreateUserFoodEntryForm({
       isFormLoading={mutation.isLoading}
       initialValues={initialValues}
     />
-  );
+  )
 }
